@@ -1,0 +1,30 @@
+{
+  "name": "theHustleServer",
+  "version": "1.0.0",
+  "description": "The server for Hustle",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app"
+  },
+  "dependencies": {
+    "async": "^2.6.0",
+    "bcryptjs": "*",
+    "body-parser": "*",
+    "compression": "^1.7.0",
+    "cookie-parser": "^1.4.3",
+    "cookie-session": "*",
+    "cors": "*",
+    "express": "*",
+    "express-rate-limit": "^2.11.0",
+    "helmet": "^3.9.0",
+    "jsonwebtoken": "*",
+    "mongoose": "*",
+    "nodemailer": "*",
+    "passport": "*",
+    "passport-jwt": "*",
+    "stripe": "^4.18.0"
+  },
+  "author": "Angelo Crincoli",
+  "license": "ISC"
+}
