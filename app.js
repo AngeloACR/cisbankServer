@@ -77,11 +77,11 @@ app.use(cookieSess ({
 
 app.use(helmet());
 
-	// Passport Middleware
+/*	// Passport Middleware
 app.use(passport.initialize());
 app.use(passport.session());
 require('./config/passport')(passport);
-
+*/
 // Set Static Folder
 
 app.use(express.static(path.join(__dirname, 'public')));
