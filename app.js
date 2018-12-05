@@ -23,13 +23,13 @@ const testPort= 3000;
 const prodPort = process.env.PORT || 8080;
 
 //const myPort = testPort;
-const myPort = testPort;
+const myPort = prodPort;
 
 
 //Database stuff
 
 //const myDB = config.testDB;
-const myDB = config.testDB;
+const myDB = config.prodDB;
 
 	// Connect to Database
 mongoose.connect(myDB);
