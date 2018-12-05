@@ -22,7 +22,7 @@
     "mongoose": "*",
     "nodemailer": "*",
     "passport": "*",
-    "passport-jwt": "*",
+    "passport-jwt": "*"
   },
   "author": "Angelo Crincoli",
   "license": "ISC"
