@@ -29,7 +29,7 @@ userRouter.post('/cUser', (req, res, next) => {
 		validEmail: false,
 		username: req.body.username,
 		password: req.body.password,
-		role: "HustleMan",
+		role: req.body.role,
 		hasCart: false,
 		hasCheck: false
 	}

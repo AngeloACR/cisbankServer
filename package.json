@@ -22,7 +22,8 @@
     "mongoose": "*",
     "nodemailer": "*",
     "passport": "*",
-    "passport-jwt": "*"
+    "passport-jwt": "*",
+    "multer": "*"
   },
   "author": "Angelo Crincoli",
   "license": "ISC"
