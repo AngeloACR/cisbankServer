@@ -299,10 +299,10 @@ MIT
 @angular/router
 MIT
 
-@angular/forms
+ngx-papaparse
 MIT
 
-ngx-papaparse
+@angular/forms
 MIT
 
 zone.js
