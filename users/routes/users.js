@@ -30,8 +30,6 @@ userRouter.post('/cUser', (req, res, next) => {
 		username: req.body.username,
 		password: req.body.password,
 		role: req.body.role,
-		hasCart: false,
-		hasCheck: false
 	}
 
 	let newUser = new User(user);
@@ -286,10 +284,10 @@ userRouter.post('/cToken', (req, res, next) => {
 
 	var sendMail = function(uToken, callback){
 		var mailOptions = {
-		    from: '"The Hustle Club" <contacto@thehustleclub.org>', // sender address
+		    from: '"Cisbank" <contacto@cisbank.com>', // sender address
 		    to: uToken.email, // list of receivers
-		    subject: 'Hustle validation', // Subject line
-		    text: 'Hello! come on and enjoy the hustle benefits!', // plaintext body
+		    subject: 'Cisbank validation', // Subject line
+		    text: 'Hello! come on and enjoy the cisbank adventure!', // plaintext body
 		    html: '<b>'+vCombo[0]+'</b>' // html body
 		};
 
@@ -331,7 +329,7 @@ userRouter.post('/vUser', (req, res, next) => {
 
 	const hrTime = process.hrtime();
 	const thisTime = hrTime[0] * 1000000 + hrTime[1] / 1000
-	const maxTime = 3600*8*1000000; //60 segundos
+	const maxTime = 3600*8*1000000; 
 
 	var gUser = function(callback){
 		getUser(username, (err, user) => {

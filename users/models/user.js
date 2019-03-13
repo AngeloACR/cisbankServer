@@ -38,12 +38,7 @@ const UserSchema = mongoose.Schema({
 	validEmail:{
 		type: Boolean
 	},
-	hasCart:{
-		type: Boolean
-	},
-	hasCheck:{
-		type: Boolean
-	}
+
 });
 
 const User = module.exports = mongoose.model('User', UserSchema);

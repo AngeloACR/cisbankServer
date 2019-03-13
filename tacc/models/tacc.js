@@ -13,11 +13,15 @@ const TAccSchema = mongoose.Schema({
 	},
 	tType: {
 		type: String,
+		required: true
 	},
 	tNature: {
 		type: String,
 		required: true
-	}
+	},
+	tMoves:[{
+		type: String
+	}]
 });
 
 const TAcc = module.exports = mongoose.model('TAcc', TAccSchema);
@@ -27,7 +31,7 @@ module.exports.getTAccById = function(id, callback){
 };
 
 module.exports.getTAccByName = function(name, callback){
-	const query = tName: name};
+	const query = {tName: name};
 	TAcc.findOne(query, callback);
 };
 
@@ -41,7 +45,7 @@ module.exports.createTAcc = function(newTAcc, callback){
 };
 
 module.exports.deleteTAcc = function(tAccToDelete, callback){
-	const query = {tName: tAccToDelete.pName}
+	const query = {tName: tAccToDelete.tName}
 	TAcc.findOneAndRemove(query, callback);	
 };
 

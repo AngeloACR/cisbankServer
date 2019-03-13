@@ -12,11 +12,11 @@ const helmet = require('helmet');
 const RateLimit = require('express-rate-limit');
 const app = express();
 
-/*const users = require('./users/routes/users');
-const baccounts = require('./baccounts/routes/baccounts');
-const taccounts = require('./taccounts/routes/taccounts');
-const transactions = require('./transactions/routes/transactions');
-*/
+const users = require('./users/routes/users');
+const baccs = require('./bacc/routes/baccs');
+const taccs = require('./tacc/routes/taccs');
+const moves = require('./moves/routes/moves');
+
 
 // Ports to listen
 const testPort= 3000;
@@ -87,12 +87,12 @@ require('./config/passport')(passport);
 app.use(express.static(path.join(__dirname, 'public')));
 
 //Adding routes
-/*
+
 app.use('/users', users);
-app.use('/baccounts', baccounts);
-app.use('/taccounts', taccounts);
-app.use('/transactions', transactions);
-*/
+app.use('/baccs', baccs);
+app.use('/taccs', taccs);
+app.use('/moves', moves);
+
 
 // Index Route
 

@@ -19,6 +19,7 @@ tAccRouter.post('/cTAcc', (req, res, next) => {
 		tNature: tNature
 	});
 
+
 	TAcc.createTAcc(newTAcc, (cErr, tAcc) => {
 		if(cErr) {
 			return res.json({
@@ -28,58 +29,73 @@ tAccRouter.post('/cTAcc', (req, res, next) => {
 		}
 		return res.json({
 			success: true, 
-			msg: 'TAcc registered'
+			msg: 'TAcc registered',
+			tAcc: tAcc
 		});	
 	});
 
 });
 
 //Get TAcc
-tAccRouter.get('/gTAcc', passport.authenticate('jwt', {session:false}), (req, res, next) => {
-	const user = req.user;
+tAccRouter.post('/gTAcc', (req, res, next) => {
 
-	Checkoute.getCheckoutByUsername(user.username, (cErr,check) => {
+	const tName = req.body.tName;
+
+	TAcc.getTAccByName(tName, (err,tAcc) => {
 	if(err) throw err;
-		if(!check){
-			console.log("Returning error");
+		if(!tAcc){
 			return res.json({
 				success: false, 
-				msg:'TAcc not found'
+				msg:'tAcc not found'
 			});			
 		} else{
 			return res.json({
 				success: true, 
-				TAcc: check
+				TAcc: tAcc
 			});				
 		};
 	});
 
 });
 
-//Update TAcc
-tAccRouter.post('/uTAcc', passport.authenticate('jwt', {session:false}), (req, res, next) => {
-	const user = req.user;
+// Get all BAccs
+tAccRouter.get('/gTAccs', (req, res, next) => {
+	
+	TAcc.getAllTAccs( (err, tAccs) => {
+		if (err) throw err;
+		var tMap = [{}];
+		var i = 0;
+		tAccs.forEach(function(tAcc) {
+			tMap[i] = tAcc;
+			i++;
+		});
+		return res.json({
+			tAccs: tMap
+		});
+	});
+});
+
+
+//Update BAcc
+tAccRouter.post('/uTAcc', (req, res, next) => {
+	
+	const type = req.body.type;
+	const tName = req.body.tName
 	const updateData = req.body.updateData
 
-	let dataToUpdate = new TAcc({
-		username: user.username,
-		email: updateData.email,
-		charges: updateData.Charges,
-		cards: updateData.cards,
-		bAddress: updateData.bAddress,
-		sAddress: updateData.sAddress
-	});
+	// Agregar switch case con todas las posibles actualizaciones
 
-	Checkoute.getCheckoutByUsername(user.username, (err,check) => {
+
+	TAcc.getTAccByName(tName, (err,tAcc) => {
 	if(err) throw err;
-		if(!check){
+		if(!tAcc){
 			console.log("Returning error");
 			return res.json({
 				success: false, 
 				msg:'TAcc not found'
 			});			
 		} else{
-			TAcc.updateCheckout(check, dataToUpdate, (uErr,uCheck) => {
+			TAcc.updateTAcc(tAcc, updateData, (uErr,uTAcc) => {
 				return res.json({
 					success: true, 
 					msg: 'TAcc updated'
@@ -89,19 +105,20 @@ tAccRouter.post('/uTAcc', passport.authenticate('jwt', {session:false}), (req, r
 	});
 });
 
-//Delete TAcc
-tAccRouter.post('/dTAcc', passport.authenticate('jwt', {session:false}), (req, res, next) => {
-	const user = req.user;
+//Delete BAcc
+tAccRouter.post('/dTAcc', (req, res, next) => {
 
-	Checkoute.getCheckoutByUsername(user.username, (cErr,check) => {
+	const tName = req.body.tName
+
+	TAcc.getTAccByName(tName, (cErr,tAcc) => {
 	if(err) throw err;
-		if(!check){
+		if(!tAcc){
 			return res.json({
 				success: false, 
 				msg:'TAcc not found'
 			});			
 		} else{
-			TAcc.deleteCheckout(check, (cErr,dCheck) => {
+			TAcc.deleteTAcc(tAcc, (cErr,dTAcc) => {
 				if(err) throw err;
 				return res.json({
 					success: true, 
