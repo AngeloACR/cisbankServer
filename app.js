@@ -22,8 +22,8 @@ const moves = require('./moves/routes/moves');
 const testPort= 3000;
 const prodPort = process.env.PORT || 8080;
 
-const myPort = testPort;
-//const myPort = prodPort;
+//const myPort = testPort;
+const myPort = prodPort;
 
 
 //Database stuff
