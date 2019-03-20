@@ -8,12 +8,12 @@ const spawn = require("child_process").spawn;
 moveRouter.post('/cMove', (req, res, next) => {
 
 //	const mCode = Move.estimatedDocumentCount();					//INGENIARSE UN METODO DE ASIGNACION DE MCODE
-	const mCode = 1;
 	const mAmmount = req.body.mAmmount;
 	const mBAcc = req.body.mBAcc;
 	const mSign = req.body.mSign;
 	const mDesc = req.body.mDesc;
 	const mTAcc = req.body.mTAcc;
+	const mCode = Move.getCode(mBAcc, mTAcc);
 
 	let newMove = new Move({
 		mCode: mCode,
@@ -32,29 +32,35 @@ moveRouter.post('/cMove', (req, res, next) => {
 			});
 		}
 
-		/*const bId = move.mBAcc
-		const tId = move.mTAcc
-		const mId = move.mCode
+		const bId = move.mBAcc;
+		const tId = move.mTAcc;
+		const mId = move.mCode;
 
-		const updatePath = "../../python/updateBalance.py";
+		const updatePath = "./python/updateBalance.py";
 
 		const updateOptions = [updatePath, bId, tId, mId];
 
 		const updateProcess = spawn('python', updateOptions);
-		
+
+		var myData
 		updateProcess.stdout.on('data', (data) => {
+			console.log(data.toString());
+			myData = data.toString();
+		});
+
+		updateProcess.on('close', (code) => {
 			return res.json({
 				success: true, 
-				msg: data
-			});		
+				msg: myData
+			});	
 		});
-*/
-		return res.json({
+
+/*		return res.json({
 			success: true, 
 			msg: 'Move registered',
 			move: move
 		});
-
+*/
 	});
 
 });
@@ -81,19 +87,25 @@ moveRouter.post('/gMove', (req, res, next) => {
 });
 
 // Get all BAccs
-moveRouter.get('/gMoves', (req, res, next) => {
-	
+moveRouter.get('/gMoves', (req, res, next) => {	
 	Move.getAllMoves( (err, moves) => {
 		if (err) throw err;
 		var mMap = [{}];
 		var i = 0;
-		moves.forEach(function(move) {
-			mMap[i] = move;
-			i++;
-		});
-		return res.json({
-			moves: mMap
-		});
+		if (moves && moves.length) {   
+			moves.forEach(function(move) {
+				mMap[i] = move;
+				i++;
+			});
+			return res.json({
+				status: true,
+				moves: mMap
+			});
+		} else {
+			return res.json({
+				status: false
+			});
+		}
 	});
 });
 

@@ -3,7 +3,6 @@ const tAccRouter = express.Router();
 const TAcc = require('../models/tacc');
 const passport = require('passport');
 
-
 //Create TAcc
 tAccRouter.post('/cTAcc', (req, res, next) => {
 
@@ -18,7 +17,6 @@ tAccRouter.post('/cTAcc', (req, res, next) => {
 		tType: tType,
 		tNature: tNature
 	});
-
 
 	TAcc.createTAcc(newTAcc, (cErr, tAcc) => {
 		if(cErr) {
@@ -60,18 +58,24 @@ tAccRouter.post('/gTAcc', (req, res, next) => {
 
 // Get all BAccs
 tAccRouter.get('/gTAccs', (req, res, next) => {
-	
 	TAcc.getAllTAccs( (err, tAccs) => {
 		if (err) throw err;
 		var tMap = [{}];
 		var i = 0;
-		tAccs.forEach(function(tAcc) {
-			tMap[i] = tAcc;
-			i++;
-		});
-		return res.json({
-			tAccs: tMap
-		});
+		if (tAccs && tAccs.length) {   
+			tAccs.forEach(function(tAcc) {
+				tMap[i] = tAcc;
+				i++;
+			});
+			return res.json({
+				status: true,
+				tAccs: tMap
+			});
+		} else {
+			return res.json({
+				status: false
+			});
+		}		
 	});
 });
 

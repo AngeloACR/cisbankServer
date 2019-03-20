@@ -17,14 +17,14 @@ bAccRouter.post('/cBAcc', (req, res, next) => {
 		bBalance: bBalance,
 		bNumber: bNumber,
 	});
+	
 	BAcc.createBAcc(newBAcc, (cErr, bAcc) => {
 		if(cErr) {
 			return res.json({
 				success: false, 
 				msg: cErr
 			});
-		}
-		console.log(bAcc);			
+		}		
 		return res.json({
 			success: true, 
 			msg: 'BAcc registered',
@@ -58,18 +58,26 @@ bAccRouter.post('/gBAcc', (req, res, next) => {
 
 // Get all BAccs
 bAccRouter.get('/gBAccs', (req, res, next) => {
-	
 	BAcc.getAllBAccs( (err, banks) => {
 		if (err) throw err;
 		var bMap = [{}];
 		var i = 0;
-		banks.forEach(function(bank) {
-			bMap[i] = bank;
-			i++;
-		});
-		return res.json({
-			banks: bMap
-		});
+		if (banks && banks.length) {   
+			banks.forEach(function(bank) {
+				bMap[i] = bank;
+				i++;
+			});
+			return res.json({
+				status: true,
+				banks: bMap
+			});
+		} else {
+			return res.json({
+				status: false,
+				banks: bMap
+			});
+		}
+
 	});
 });
 

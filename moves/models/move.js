@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const config = require('../../config/database');
+const crypto = require('crypto');
 
 // Move Schema
 const MoveSchema = mongoose.Schema({
@@ -75,4 +76,17 @@ module.exports.removeMove = function(rMove, callback){
     	"isRemoved": true
     }},
 	callback);
+};
+
+module.exports.getCode = function(mBAcc, mTAcc){
+	
+	const hash = crypto.createHash('sha1');
+	
+	var hrTime = process.hrtime();
+	var validTime = hrTime[0] * 1000000 + hrTime[1] / 1000
+
+	var toHash = mBAcc + mTAcc + validTime + config.mSecret;
+	hash.update(toHash);
+	return hash.digest('hex');
+
 };

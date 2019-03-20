@@ -22,14 +22,14 @@ const moves = require('./moves/routes/moves');
 const testPort= 3000;
 const prodPort = process.env.PORT || 8080;
 
-//const myPort = testPort;
-const myPort = prodPort;
+const myPort = testPort;
+//const myPort = prodPort;
 
 
 //Database stuff
 
-//const myDB = config.testDB;
-const myDB = config.prodDB;
+const myDB = config.testDB;
+//const myDB = config.prodDB;
 
 	// Connect to Database
 mongoose.connect(myDB);
@@ -48,7 +48,7 @@ mongoose.connection.on('error', (err) => {
 // Middlewares initialization
 
 // app.enable('trust proxy'); // only if you're behind a reverse proxy (Heroku, Bluemix, AWS if you use an ELB, custom Nginx setup, etc) 
- 
+/* 
 var limiter = new RateLimit({
   windowMs: 15*60*1000, // 15 minutes 
   max: 50, // limit each IP to 50 requests per windowMs 
@@ -56,14 +56,13 @@ var limiter = new RateLimit({
 });
  
 //  apply to all requests 
-app.use(limiter);
+app.use(limiter);*/
 
 	//App compression
 app.use(compression());
 
 	// Cors Middleware
 app.use(cors());
-
 
 	// Body Parser Middleware
 app.use(bodyParser.json());
