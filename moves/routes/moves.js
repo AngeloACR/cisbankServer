@@ -13,10 +13,8 @@ moveRouter.post('/cMove', (req, res, next) => {
 	const mSign = req.body.mSign;
 	const mDesc = req.body.mDesc;
 	const mTAcc = req.body.mTAcc;
-	const mCode = Move.getCode(mBAcc, mTAcc);
 
 	let newMove = new Move({
-		mCode: mCode,
 		mAmmount: mAmmount,
 		mBAcc: mBAcc,
 		mTAcc: mTAcc,
@@ -31,28 +29,32 @@ moveRouter.post('/cMove', (req, res, next) => {
 				msg: cErr
 			});
 		}
+		
+		mCode = Move.getCode(move._id, mBAcc, mTAcc);
+		Move.setCode(move, mCode, (cErr, fMove) =>{
 
-		const bId = move.mBAcc;
-		const tId = move.mTAcc;
-		const mId = move.mCode;
+			const bId = mBAcc;
+			const tId = mTAcc;
+			const mId = mCode;
 
-		const updatePath = "./python/updateBalance.py";
+			const updatePath = "./python/updateBalance.py";
 
-		const updateOptions = [updatePath, bId, tId, mId];
+			const updateOptions = [updatePath, bId, tId, mId];
 
-		const updateProcess = spawn('python', updateOptions);
+			const updateProcess = spawn('python', updateOptions);
 
-		var myData
-		updateProcess.stdout.on('data', (data) => {
-			console.log(data.toString());
-			myData = data.toString();
-		});
+			var myData
+			updateProcess.stdout.on('data', (data) => {
+				console.log(data.toString());
+				myData = data.toString();
+			});
 
-		updateProcess.on('close', (code) => {
-			return res.json({
-				success: true, 
-				msg: myData
-			});	
+			updateProcess.on('close', (code) => {
+				return res.json({
+					success: true, 
+					msg: myData
+				});	
+			});
 		});
 
 /*		return res.json({

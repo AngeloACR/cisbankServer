@@ -42,6 +42,7 @@ def updateB(bId, mId, myDB):
 		mQuery = {'mCode': mId}
 		bacc = baccs.find_one(bQuery)
 		move = moves.find_one(mQuery)
+
 		if move['mSign']:
 			newBalance = bacc['bBalance'] + move['mAmmount']
 		else:
@@ -94,13 +95,12 @@ def sendResult(dOut):
 	sys.stdout.flush()
 
 def main():
-	myDB = "mongodb://localhost:27017/cisbank"
-	#myDB = "mongodb://angeloacr:cisbankDataBase47@ds051595.mlab.com:51595"
+	#myDB = "mongodb://localhost:27017/cisbank"
+	myDB = "mongodb://angeloacr:cisbankDataBase47@ds051595.mlab.com:51595"
 
 	bId = sys.argv[1]
 	tId = sys.argv[2]
 	mId = sys.argv[3]
-
 	updateB(bId, mId, myDB)
 	updateT(tId, mId, myDB)
 	sendResult("Success")

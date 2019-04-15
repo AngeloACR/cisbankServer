@@ -31,6 +31,13 @@ const MoveSchema = mongoose.Schema({
 	isRemoved: {
 		type: Boolean,
 		default: false
+	},
+	mDate: {
+  		type: Date, 
+  		default: Date.now
+	},
+	mCode: {
+		type: String
 	}
 });
 
@@ -60,11 +67,11 @@ module.exports.deleteMove = function(moveToDelete, callback){
 	Move.findOneAndRemove(query, callback);	
 };*/
 
-module.exports.updateMoveCode = function(moveToUpdate, updateData, callback){
-	const query = {mCode: moveToUpdate.mCode};
+module.exports.setCode = function(move, code, callback){
+	const query = {_id: move._id};
 	Move.findOneAndUpdate(query, 
     { $set: { 
-		"mCode": updateData.mCode
+		"mCode": code
     }},
 	callback);
 };
@@ -78,15 +85,10 @@ module.exports.removeMove = function(rMove, callback){
 	callback);
 };
 
-module.exports.getCode = function(mBAcc, mTAcc){
-	
-	const hash = crypto.createHash('sha1');
-	
-	var hrTime = process.hrtime();
-	var validTime = hrTime[0] * 1000000 + hrTime[1] / 1000
-
-	var toHash = mBAcc + mTAcc + validTime + config.mSecret;
-	hash.update(toHash);
-	return hash.digest('hex');
+module.exports.getCode = function(mId, bId, tId){
+	let mCode = String(mId)
+	mCode = mCode.substring(mCode.length-4,mCode.length);
+	let code = String(mCode+'/'+bId+'/'+tId);
+	return code;
 
 };
