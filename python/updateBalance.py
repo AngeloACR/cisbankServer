@@ -120,8 +120,8 @@ def sendResult(dOut):
 	sys.stdout.flush()
 
 def main():
-	#myDB = "mongodb://localhost:27017/cisbank"
-	myDB = "mongodb://cisbank:cisTable47@ds051595.mlab.com:51595/cisbank"
+	myDB = "mongodb://localhost:27017/cisbank"
+	#myDB = "mongodb://cisbank:cisTable47@ds051595.mlab.com:51595/cisbank"
 
 	bId = sys.argv[1]
 	tId = sys.argv[2]
