@@ -121,7 +121,7 @@ def sendResult(dOut):
 
 def main():
 	#myDB = "mongodb://localhost:27017/cisbank"
-	myDB = "mongodb://angeloacr:cisbankDataBase47@ds051595.mlab.com:51595"
+	myDB = "mongodb://cisbank:cisTable47@ds051595.mlab.com:51595/cisbank"
 
 	bId = sys.argv[1]
 	tId = sys.argv[2]
