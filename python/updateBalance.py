@@ -71,7 +71,7 @@ def updateB(bId, mId, myDB):
 
 		closeConnect(bConnect)
 		status = True
-		return status
+		return status id="mainT"
 
 	except Exception as ex:
 		template = "An exception of type {0} occurred. Arguments:\n{1!r}"
