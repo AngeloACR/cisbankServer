@@ -32,7 +32,6 @@ moveRouter.post('/cMove', (req, res, next) => {
 		
 		mCode = Move.getCode(move._id, mBAcc, mTAcc);
 		Move.setCode(move, mCode, (cErr, fMove) =>{
-
 			const bId = mBAcc;
 			const tId = mTAcc;
 			const mId = mCode;
@@ -43,7 +42,8 @@ moveRouter.post('/cMove', (req, res, next) => {
 
 			const updateProcess = spawn('python', updateOptions);
 
-			var myData
+			var myData;
+			
 			updateProcess.stdout.on('data', (data) => {
 				console.log(data.toString());
 				myData = data.toString();

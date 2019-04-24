@@ -38,6 +38,12 @@ const MoveSchema = mongoose.Schema({
 	},
 	mCode: {
 		type: String
+	},
+	mOld: {
+		type: Number
+	},
+	mNew: {
+		type: Number
 	}
 });
 

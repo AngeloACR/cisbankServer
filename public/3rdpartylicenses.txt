@@ -293,13 +293,13 @@ MIT
 @angular/common
 MIT
 
+ngx-papaparse
+MIT
+
 @angular/platform-browser
 MIT
 
 @angular/router
-MIT
-
-ngx-papaparse
 MIT
 
 @angular/forms

@@ -42,25 +42,44 @@ def updateB(bId, mId, myDB):
 		mQuery = {'mCode': mId}
 		bacc = baccs.find_one(bQuery)
 		move = moves.find_one(mQuery)
-
 		if move['mSign']:
 			newBalance = bacc['bBalance'] + move['mAmmount']
 		else:
 			newBalance = bacc['bBalance'] - move['mAmmount']
 
+		oldB = bacc['bBalance']
+
 		newMoves = []
+
 		newMoves.extend(bacc['bMoves'])
 		newMoves.append(mId)
 
+		mOld = { "$set": { "mOld": bacc['bBalance'] } }
+		mNew = { "$set": { "mNew": newBalance } }
+
 		bBalance = { "$set": { "bBalance": newBalance } }
 		bMoves = { "$set": { "bMoves": newMoves } }
+
+
 		
 		baccs.update_one(bQuery, bBalance)
 		baccs.update_one(bQuery, bMoves)
 		
+		moves.update_one(mQuery, mOld)
+		moves.update_one(mQuery, mNew)
+
+
 		closeConnect(bConnect)
-	except:
-		sendResult("Updating Bank Error")
+		status = True
+		return status
+
+	except Exception as ex:
+		template = "An exception of type {0} occurred. Arguments:\n{1!r}"
+		message = template.format(type(ex).__name__, ex.args)
+		sendResult(message)
+		status = False
+		return status
+
 
 def updateT(tId, mId, myDB):
 	try:
@@ -81,14 +100,20 @@ def updateT(tId, mId, myDB):
 		newMoves.append(mId)
 
 		tBalance = { "$set": { "tBalance": newBalance } }
-		tMoves = { "$set": { "tMove": newMoves } }
+		tMoves = { "$set": { "tMoves": newMoves } }
 		
 		taccs.update_one(tQuery, tBalance)
 		taccs.update_one(tQuery, tMoves)
-
 		closeConnect(tConnect)
-	except:
-		sendResult("Updating T Error")
+		status = True
+		return status
+	
+	except Exception as ex:
+		template = "An exception of type {0} occurred. Arguments:\n{1!r}"
+		message = template.format(type(ex).__name__, ex.args)
+		sendResult(message)
+		status = False
+		return status
 
 def sendResult(dOut):
 	print(dOut)
@@ -101,9 +126,12 @@ def main():
 	bId = sys.argv[1]
 	tId = sys.argv[2]
 	mId = sys.argv[3]
-	updateB(bId, mId, myDB)
-	updateT(tId, mId, myDB)
-	sendResult("Success")
+	statusB = updateB(bId, mId, myDB)
+	statusT = updateT(tId, mId, myDB)
+	if statusB and statusT:
+		sendResult("Success")
+	else:
+		sendResult("Error")
 
 #if __name__ == "__main__":
  #   sendResult("Init")
