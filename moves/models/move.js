@@ -4,6 +4,10 @@ const crypto = require('crypto');
 
 // Move Schema
 const MoveSchema = mongoose.Schema({
+	mDate: {
+  		type: Date, 
+  		default: Date.now
+	},
 	mCode: {
 		type: String,
 		required: true
@@ -31,10 +35,6 @@ const MoveSchema = mongoose.Schema({
 	isRemoved: {
 		type: Boolean,
 		default: false
-	},
-	mDate: {
-  		type: Date, 
-  		default: Date.now
 	},
 	mCode: {
 		type: String
