@@ -7,13 +7,13 @@ const passport = require('passport');
 tAccRouter.post('/cTAcc', (req, res, next) => {
 
 	const tName = req.body.tName;
-	const tBalance = req.body.tBalance;
+	//const tBalance = req.body.tBalance;
 	const tType = req.body.tType;
 	const tNature = req.body.tNature;
 
 	let newTAcc = new TAcc({
 		tName: tName,
-		tBalance: tBalance,
+		tBalance: 0,
 		tType: tType,
 		tNature: tNature
 	});

@@ -1,6 +1,7 @@
 const express = require('express');
 const moveRouter = express.Router();
 const Move = require('../models/move');
+const DMove = require('../models/dmove');
 const passport = require('passport');
 const spawn = require("child_process").spawn;
 
@@ -13,6 +14,7 @@ moveRouter.post('/cMove', (req, res, next) => {
 	const mSign = req.body.mSign;
 	const mDesc = req.body.mDesc;
 	const mTAcc = req.body.mTAcc;
+	const mDate = req.body.mDate;
 
 	let newMove = new Move({
 		mAmmount: mAmmount,
@@ -21,6 +23,27 @@ moveRouter.post('/cMove', (req, res, next) => {
 		mDesc: mDesc,
 		mSign: mSign
 	});
+
+	DMove.getDMoveByDate(mDate, (err,dMove) => {
+	if(err) throw err;
+		if(!dMove){
+			let newDMove = new DMove({
+				mDate: mDate,
+				mDebe: 0,
+				mHaber: 0,
+				mTotal: 0,
+				mClose: false
+			});
+
+			DMove.createDMove(newDMove, (cErr, nDMove) => {
+				if(cErr) {
+					console.log(cErr);
+				}
+
+			});
+		}
+	});
+
 
 	Move.createMove(newMove, (cErr, move) => {
 		if(cErr) {
@@ -35,10 +58,11 @@ moveRouter.post('/cMove', (req, res, next) => {
 			const bId = mBAcc;
 			const tId = mTAcc;
 			const mId = mCode;
+			const mDay = mDate;
 
 			const updatePath = "./python/updateBalance.py";
 
-			const updateOptions = [updatePath, bId, tId, mId];
+			const updateOptions = [updatePath, bId, tId, mId, mDay];
 
 			const updateProcess = spawn('python', updateOptions);
 
@@ -71,9 +95,9 @@ moveRouter.post('/cMove', (req, res, next) => {
 moveRouter.post('/gMove', (req, res, next) => {
 
 	const mCode = req.body.mCode;
-	Move.getMoveByCode(mCode, (err,bAcc) => {
+	Move.getMoveByCode(mCode, (err,move) => {
 	if(err) throw err;
-		if(!bAcc){
+		if(!move){
 			return res.json({
 				success: false, 
 				msg:'Move not found'
@@ -81,14 +105,35 @@ moveRouter.post('/gMove', (req, res, next) => {
 		} else{
 			return res.json({
 				success: true, 
-				BAcc: bAcc
+				Move: move
 			});				
 		};
 	});
 
 });
 
-// Get all BAccs
+//Get Daily Move
+moveRouter.post('/gDMove', (req, res, next) => {
+
+	const mDate = req.body.mDate;
+	DMove.getDMoveByDate(mDate, (err,dMove) => {
+	if(err) throw err;
+		if(!dMove){
+			return res.json({
+				success: false, 
+				msg:'DMove not found'
+			});			
+		} else{
+			return res.json({
+				success: true, 
+				DMove: dMove
+			});				
+		};
+	});
+
+});
+
+// Get all Moves
 moveRouter.get('/gMoves', (req, res, next) => {	
 	Move.getAllMoves( (err, moves) => {
 		if (err) throw err;

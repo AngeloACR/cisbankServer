@@ -19,29 +19,31 @@ def closeConnect(connection):
 		sendResult("Close Error")
 
 
-def updateT(tId, mId, myDB):
+def totalizeMove(mDate, mId, myDB):
 	try:
 		tConnect = connectDB(myDB)
 
-		taccs = tConnect.cisbank.taccs
+		dmoves = tConnect.cisbank.dmoves
 		moves = tConnect.cisbank.moves
 
-		tQuery = {'tName': tId}
+		dQuery = {'mDate': mDate}
 		mQuery = {'mCode': mId}
-		tacc = taccs.find_one(tQuery)
+		dmove = dmoves.find_one(dQuery)
 		move = moves.find_one(mQuery)
 
-		newBalance = tacc['tBalance'] + move['mAmmount']
-
-		newMoves = []
-		newMoves.extend(tacc['tMoves'])
-		newMoves.append(mId)
-
-		tBalance = { "$set": { "tBalance": newBalance } }
-		tMoves = { "$set": { "tMoves": newMoves } }
+		if move['mSign']:
+			newDebe = dmove['mDebe'] + move['mAmmount']
+			mDebe = { "$set": { "mDebe": newDebe } }
+			dmoves.update_one(dQuery, mDebe)
+		else:
+			newHaber = dmove['mHaber'] + move['mAmmount']
+			mHaber = { "$set": { "mHaber": newHaber } }
+			dmoves.update_one(dQuery, mHaber)
 		
-		taccs.update_one(tQuery, tBalance)
-		taccs.update_one(tQuery, tMoves)
+		newTotal = dmove['mDebe'] - dmove['mHaber']
+		mTotal = { "$set": { "mTotal": newTotal } }
+		dmoves.update_one(dQuery, mTotal)
+
 		closeConnect(tConnect)
 		status = True
 		return status
@@ -61,12 +63,9 @@ def main():
 	#myDB = "mongodb://localhost:27017/cisbank"
 	myDB = "mongodb://cisbank:cisTable47@ds051595.mlab.com:51595/cisbank"
 
-	bId = sys.argv[1]
-	tId = sys.argv[2]
-	mId = sys.argv[3]
-	statusB = updateB(bId, mId, myDB)
-	statusT = updateT(tId, mId, myDB)
-	if statusB and statusT:
+	mId = sys.argv[1]
+	statusM = updateB(mId, myDB)
+	if statusM:
 		sendResult("Success")
 	else:
 		sendResult("Error")
