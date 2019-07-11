@@ -2,12 +2,13 @@ const express = require('express');
 const tAccRouter = express.Router();
 const TAcc = require('../models/tacc');
 const passport = require('passport');
+const MTAcc = require('../models/mtacc');
 
 //Create TAcc
 tAccRouter.post('/cTAcc', (req, res, next) => {
 
 	const tName = req.body.tName;
-	//const tBalance = req.body.tBalance;
+	const tMonth = req.body.tMonth;
 	const tType = req.body.tType;
 	const tNature = req.body.tNature;
 
@@ -16,6 +17,16 @@ tAccRouter.post('/cTAcc', (req, res, next) => {
 		tBalance: 0,
 		tType: tType,
 		tNature: tNature
+	});
+
+	let newMTAcc = new MTAcc({
+		tName: tName,
+		tMonth: tMonth,
+		tNature: tNature,
+		tBalance: 0
+	});
+	MTAcc.createMTAcc(newMTAcc, (mErr, mtAcc) =>{
+		if(mErr) console.log(mErr);
 	});
 
 	TAcc.createTAcc(newTAcc, (cErr, tAcc) => {
@@ -29,9 +40,8 @@ tAccRouter.post('/cTAcc', (req, res, next) => {
 			success: true, 
 			msg: 'TAcc registered',
 			tAcc: tAcc
-		});	
-	});
-
+		})
+	});	
 });
 
 //Get TAcc
@@ -130,6 +140,29 @@ tAccRouter.post('/dTAcc', (req, res, next) => {
 				});			
 			});	
 		};
+	});
+});
+
+// Get all BAccs
+tAccRouter.get('/gmTAccs', (req, res, next) => {
+	MTAcc.getAllMTAccs( (err, mtAccs) => {
+		if (err) throw err;
+		var tMap = [{}];
+		var i = 0;
+		if (mtAccs && mtAccs.length) {   
+			mtAccs.forEach(function(mtAcc) {
+				tMap[i] = mtAcc;
+				i++;
+			});
+			return res.json({
+				status: true,
+				mtAccs: tMap
+			});
+		} else {
+			return res.json({
+				status: false
+			});
+		}		
 	});
 });
 

@@ -123,8 +123,8 @@ def totalizeMove(mDate, mId, myDB):
 		moves = tConnect.cisbank.moves
 
 		dQuery = {'mDate': mDate}
-		mQuery = {'mCode': mId}
 		dmove = dmoves.find_one(dQuery)
+		mQuery = {'mCode': mId}
 		move = moves.find_one(mQuery)
 
 		if move['mSign']:
@@ -154,6 +154,34 @@ def totalizeMove(mDate, mId, myDB):
 		status = False
 		return status
 
+def totalizeMonths(tId, mId, myDB):
+	try:
+		tConnect = connectDB(myDB)
+
+		moves = tConnect.cisbank.moves
+		mtaccs = tConnect.cisbank.mtaccs
+
+		mQuery = {'mCode': mId}
+		move = moves.find_one(mQuery)
+
+		mtQuery = {'tName': tId}
+		mtacc = mtaccs.find_one(mtQuery)
+
+		newBalance = mtacc['tBalance'] + move['mAmmount']
+		mtBalance = { "$set": { "tBalance": newBalance } }
+		
+		mtaccs.update_one(mtQuery, mtBalance)
+		closeConnect(tConnect)
+		status = True
+		return status
+	
+	except Exception as ex:
+		template = "An exception of type {0} occurred. Arguments:\n{1!r}"
+		message = template.format(type(ex).__name__, ex.args)
+		sendResult(message)
+		status = False
+		return status
+
 def sendResult(dOut):
 	print(dOut)
 	sys.stdout.flush()
@@ -165,10 +193,11 @@ def main():
 	bId = sys.argv[1]
 	tId = sys.argv[2]
 	mId = sys.argv[3]
-	mDate = sys.argv[4]
+	#mDate = sys.argv[4]
 	statusB = updateB(bId, mId, myDB)
 	statusT = updateT(tId, mId, myDB)
-	statusM = totalizeMove(mDate, mId, myDB)
+	#statusM = totalizeMove(mDate, mId, myDB)
+	statusA = totalizeMonths(tId, mId, myDB)
 	if statusB and statusT and statusM:
 		sendResult("Success")
 	else:

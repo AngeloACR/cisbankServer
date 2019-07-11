@@ -58,16 +58,17 @@ moveRouter.post('/cMove', (req, res, next) => {
 			const bId = mBAcc;
 			const tId = mTAcc;
 			const mId = mCode;
-			const mDay = mDate;
+//			const mDay = mDate;
 
 			const updatePath = "./python/updateBalance.py";
 
-			const updateOptions = [updatePath, bId, tId, mId, mDay];
+//			const updateOptions = [updatePath, bId, tId, mId, mDay];
+			const updateOptions = [updatePath, bId, tId, mId];
 
 			const updateProcess = spawn('python', updateOptions);
 
 			var myData;
-			
+
 			updateProcess.stdout.on('data', (data) => {
 				console.log(data.toString());
 				myData = data.toString();
