@@ -125,17 +125,17 @@ tAccRouter.post('/dTAcc', (req, res, next) => {
 	const tName = req.body.tName
 
 	TAcc.getTAccByName(tName, (cErr,tAcc) => {
-	if(err) throw err;
+	if(cErr) throw cErr;
 		if(!tAcc){
 			return res.json({
-				success: false, 
+				status: false, 
 				msg:'TAcc not found'
 			});			
 		} else{
-			TAcc.deleteTAcc(tAcc, (cErr,dTAcc) => {
-				if(err) throw err;
+			TAcc.deleteTAcc(tAcc, (dErr,dTAcc) => {
+				if(dErr) throw dErr;
 				return res.json({
-					success: true, 
+					status: true, 
 					msg:'TAcc deleted'
 				});			
 			});	

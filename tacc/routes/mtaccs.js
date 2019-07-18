@@ -118,14 +118,14 @@ mtAccRouter.post('/dmTAcc', (req, res, next) => {
 	if(err) throw err;
 		if(!mtAcc){
 			return res.json({
-				success: false, 
+				status: false, 
 				msg:'mTAcc not found'
 			});			
 		} else{
 			mTAcc.deletemTAcc(mtAcc, (cErr,dmTAcc) => {
 				if(err) throw err;
 				return res.json({
-					success: true, 
+					status: true, 
 					msg:'mTAcc deleted'
 				});			
 			});	

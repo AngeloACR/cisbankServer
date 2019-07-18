@@ -10,12 +10,14 @@ bAccRouter.post('/cBAcc', (req, res, next) => {
 	const bBank = req.body.bBank;
 	const bBalance = req.body.bBalance;
 	const bNumber = req.body.bNumber;
-
+	const bAct = req.body.bAct;
+	console.log(bAct);
 	let newBAcc = new BAcc({
 		bAlias: bAlias,
 		bBank: bBank,
 		bBalance: bBalance,
 		bNumber: bNumber,
+		bAct: bAct
 	});
 	
 	BAcc.createBAcc(newBAcc, (cErr, bAcc) => {
@@ -117,17 +119,17 @@ bAccRouter.post('/dBAcc', (req, res, next) => {
 	const bAlias = req.body.bAlias
 
 	BAcc.getBAccByAlias(bAlias, (cErr,bank) => {
-	if(err) throw err;
+	if(cErr) throw cErr;
 		if(!bank){
 			return res.json({
-				success: false, 
+				status: false, 
 				msg:'BAcc not found'
 			});			
 		} else{
-			BAcc.deleteBAcc(bank, (cErr,dBank) => {
-				if(err) throw err;
+			BAcc.deleteBAcc(bAlias, (dErr,dBank) => {
+				if(dErr) throw dErr;
 				return res.json({
-					success: true, 
+					status: true, 
 					msg:'BAcc deleted'
 				});			
 			});	

@@ -22,9 +22,8 @@ const BAccSchema = mongoose.Schema({
 	bMoves:[{
 		type: String
 	}],
-	status:{
-		type: Boolean,
-		default: true
+	bAct:{
+		type: String
 	}
 });
 
@@ -48,8 +47,8 @@ module.exports.createBAcc = function(newBAcc, callback){
 	newBAcc.save(callback);
 };
 
-module.exports.deleteBAcc = function(bAccToDelete, callback){
-	const query = {bAlias: bAccToDelete.bAlias}
+module.exports.deleteBAcc = function(bAlias, callback){
+	const query = {bAlias: bAlias}
 	BAcc.findOneAndRemove(query, callback);	
 };
 
@@ -58,6 +57,16 @@ module.exports.updateBAccAlias = function(bAccToUpdate, updateData, callback){
 	BAcc.findOneAndUpdate(query, 
     { $set: { 
 		"bName": updateData.bAlias
+
+    }},
+	callback);
+};
+
+module.exports.updateBAccStatus = function(bAccToUpdate, updateData, callback){
+	const query = {bAlias: bAccToUpdate.bAlias};
+	BAcc.findOneAndUpdate(query, 
+    { $set: { 
+		"bAct": updateData.bAct
 
     }},
 	callback);

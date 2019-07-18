@@ -91,6 +91,12 @@ module.exports.removeMove = function(rMove, callback){
 	callback);
 };
 
+module.exports.deleteMove = function(move, callback){
+	const query = {mCode: move.mCode}
+	console.log(query);
+	Move.findOneAndRemove(query, callback);	
+};
+
 module.exports.getCode = function(mId, bId, tId){
 	let mCode = String(mId)
 	mCode = mCode.substring(mCode.length-4,mCode.length);

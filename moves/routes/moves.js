@@ -196,14 +196,14 @@ moveRouter.post('/rMove', (req, res, next) => {
 	if(err) throw err;
 		if(!move){
 			return res.json({
-				success: false, 
+				status: false, 
 				msg:'Move not found'
 			});			
 		} else{
 			Move.removeMove(move, (cErr,dMove) => {
 				if(err) throw err;
 				return res.json({
-					success: true, 
+					status: true, 
 					msg:'Move deleted'
 				});			
 			});	
@@ -212,29 +212,29 @@ moveRouter.post('/rMove', (req, res, next) => {
 });
 
 
-/*
+
 //Delete BAcc
 moveRouter.post('/dMove', (req, res, next) => {
 
 	const mCode = req.body.mCode
 
 	Move.getMoveByCode(mCode, (cErr,move) => {
-	if(err) throw err;
+	if(cErr) throw cErr;
 		if(!move){
 			return res.json({
-				success: false, 
+				status: false, 
 				msg:'Move not found'
 			});			
 		} else{
-			Move.deleteMove(move, (cErr,dMove) => {
-				if(err) throw err;
+			Move.deleteMove(move, (mErr,dMove) => {
+				if(mErr) throw mErr;
 				return res.json({
-					success: true, 
+					status: true, 
 					msg:'Move deleted'
 				});			
 			});	
 		};
 	});
 });
-*/
+
 module.exports = moveRouter;
