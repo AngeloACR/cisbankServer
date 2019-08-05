@@ -49,39 +49,12 @@ module.exports.deleteTAcc = function(tAccToDelete, callback){
 	TAcc.findOneAndRemove(query, callback);	
 };
 
-module.exports.updateTAccName = function(tAccToUpdate, updateData, callback){
-	const query = {tName: tAccToUpdate.tName};
+module.exports.updateTAcc = function(tAcc, callback){
+	const query = {tName: tAcc.tName};
 	TAcc.findOneAndUpdate(query, 
     { $set: { 
-		"tName": updateData.tName
-
-    }},
-	callback);
-};
-
-module.exports.updateTAccBalance = function(tAccToUpdate, updateData, callback){
-	const query = {tName: tAccToUpdate.tName};
-	TAcc.findOneAndUpdate(query, 
-    { $set: { 
-    	"tBalance": updateData.tBalance
-    }},
-	callback);
-};
-
-module.exports.updateTAccType = function(tAccToUpdate, updateData, callback){
-	const query = {tName: tAccToUpdate.tName};
-	TAcc.findOneAndUpdate(query, 
-    { $set: {
-    	"tType": updateData.tType
-    }},
-	callback);
-};
-
-module.exports.updateTAccNature = function(tAccToUpdate, updateData, callback){
-	const query = {tName: tAccToUpdate.tName};
-	TAcc.findOneAndUpdate(query, 
-    { $set: { 
-    	"tNature": updateData.tNature
+		"tType": tAcc.tType,
+		"tNature": tAcc.tNature
     }},
 	callback);
 };

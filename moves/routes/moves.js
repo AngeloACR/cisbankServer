@@ -161,12 +161,21 @@ moveRouter.get('/gMoves', (req, res, next) => {
 //Update BAcc
 moveRouter.post('/uMove', (req, res, next) => {
 	
-	const type = req.body.type;
-	const mCode = req.body.mCode
-	const updateData = req.body.updateData
-
+	const mCode = req.body.mCode;
+	const mAmmount = req.body.mAmmount;
+	const mBAcc = req.body.mBAcc;
+	const mTAcc = req.body.mTAcc;
+	const mDesc = req.body.mDesc;
+	const mSign = req.body.mSign;
 	// Agregar switch case con todas las posibles actualizaciones
-
+	let uMove = new Move ({
+		mCode: mCode,
+		mAmmount: mAmmount,
+		mBAcc: mBAcc,
+		mTAcc: mTAcc,
+		mDesc: mDesc,
+		mSign: mSign,
+	});
 
 	Move.getMoveByCode(mCode, (err,move) => {
 	if(err) throw err;
@@ -177,7 +186,7 @@ moveRouter.post('/uMove', (req, res, next) => {
 				msg:'Move not found'
 			});			
 		} else{
-			Move.updateMove(move, updateData, (uErr,uMove) => {
+			Move.updateMove(uMove, (uErr,uMove) => {
 				return res.json({
 					success: true, 
 					msg: 'Move updated'

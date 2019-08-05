@@ -25,6 +25,7 @@ tAccRouter.post('/cTAcc', (req, res, next) => {
 		tNature: tNature,
 		tBalance: 0
 	});
+	
 	MTAcc.createMTAcc(newMTAcc, (mErr, mtAcc) =>{
 		if(mErr) console.log(mErr);
 	});
@@ -83,7 +84,8 @@ tAccRouter.get('/gTAccs', (req, res, next) => {
 			});
 		} else {
 			return res.json({
-				status: false
+				status: false,
+				tAccs: tMap
 			});
 		}		
 	});
@@ -93,11 +95,15 @@ tAccRouter.get('/gTAccs', (req, res, next) => {
 //Update BAcc
 tAccRouter.post('/uTAcc', (req, res, next) => {
 	
-	const type = req.body.type;
+	const tType = req.body.type;
 	const tName = req.body.tName
-	const updateData = req.body.updateData
+	const tNature = req.body.tNature
 
-	// Agregar switch case con todas las posibles actualizaciones
+	let tacc = new TAcc({
+		tName: tName,
+		tType: tType,
+		tNature: tNature
+	});
 
 
 	TAcc.getTAccByName(tName, (err,tAcc) => {
@@ -109,7 +115,7 @@ tAccRouter.post('/uTAcc', (req, res, next) => {
 				msg:'TAcc not found'
 			});			
 		} else{
-			TAcc.updateTAcc(tAcc, updateData, (uErr,uTAcc) => {
+			TAcc.updateTAcc(tacc, (uErr,uTAcc) => {
 				return res.json({
 					success: true, 
 					msg: 'TAcc updated'

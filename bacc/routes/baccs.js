@@ -8,14 +8,15 @@ bAccRouter.post('/cBAcc', (req, res, next) => {
 
 	const bAlias = req.body.bAlias;
 	const bBank = req.body.bBank;
-	const bBalance = req.body.bBalance;
+//	const bBalance = req.body.bBalance;
 	const bNumber = req.body.bNumber;
 	const bAct = req.body.bAct;
-	console.log(bAct);
+
 	let newBAcc = new BAcc({
 		bAlias: bAlias,
 		bBank: bBank,
-		bBalance: bBalance,
+//		bBalance: bBalance,
+		bBalance: 0,
 		bNumber: bNumber,
 		bAct: bAct
 	});
@@ -87,23 +88,31 @@ bAccRouter.get('/gBAccs', (req, res, next) => {
 //Update BAcc
 bAccRouter.post('/uBAcc', (req, res, next) => {
 	
-	const type = req.body.type;
-	const bAlias = req.body.bAlias
-	const updateData = req.body.updateData
+	const bAlias = req.body.bAlias;
+	const bBank = req.body.bBank;
+	const bBalance = req.body.bBalance;
+	const bNumber = req.body.bNumber;
+	const bAct = req.body.bAct;
 
-	// Agregar switch case con todas las posibles actualizaciones
-
+	let uBAcc = new BAcc({
+		bAlias: bAlias,
+		bBank: bBank,
+		bBalance: bBalance,
+		bNumber: bNumber,
+		bAct: bAct
+	});
 
 	BAcc.getBAccByAlias(bAlias, (err,bank) => {
-	if(err) throw err;
+		if(err) throw err;
 		if(!bank){
-			console.log("Returning error");
 			return res.json({
 				success: false, 
 				msg:'BAcc not found'
 			});			
 		} else{
-			BAcc.updateBAcc(bank, updateData, (uErr,uBAcc) => {
+			console.log('here 2');
+			BAcc.updateBAcc(uBAcc, (uErr,ubacc) => {
+				if(uErr) throw uErr;
 				return res.json({
 					success: true, 
 					msg: 'BAcc updated'

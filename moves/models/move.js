@@ -67,11 +67,19 @@ module.exports.createMove = function(newMove, callback){
 	newMove.save(callback);
 };
 
-/*
-module.exports.deleteMove = function(moveToDelete, callback){
-	const query = {mCode: moveToDelete.mCode}
-	Move.findOneAndRemove(query, callback);	
-};*/
+module.exports.updateMove = function(move, callback){
+	const query = {tName: tAcc.tName};
+	TAcc.findOneAndUpdate(query, 
+    { $set: { 
+		"mCode": move.mCode,
+		"mAmmount": move.mAmmount,
+		"mBAcc": move.mBAcc,
+		"mTAcc": move.mTAcc,
+		"mDesc": move.mDesc,
+		"mSign": move.mSign,
+    }},
+	callback);
+};
 
 module.exports.setCode = function(move, code, callback){
 	const query = {_id: move._id};

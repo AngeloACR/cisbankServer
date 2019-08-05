@@ -52,31 +52,14 @@ module.exports.deleteBAcc = function(bAlias, callback){
 	BAcc.findOneAndRemove(query, callback);	
 };
 
-module.exports.updateBAccAlias = function(bAccToUpdate, updateData, callback){
-	const query = {bAlias: bAccToUpdate.bAlias};
+module.exports.updateBAcc = function(bAcc, callback){
+	const query = {bAlias: bAcc.bAlias};
+	console.log('updating this: ' + query);
 	BAcc.findOneAndUpdate(query, 
     { $set: { 
-		"bName": updateData.bAlias
-
-    }},
-	callback);
-};
-
-module.exports.updateBAccStatus = function(bAccToUpdate, updateData, callback){
-	const query = {bAlias: bAccToUpdate.bAlias};
-	BAcc.findOneAndUpdate(query, 
-    { $set: { 
-		"bAct": updateData.bAct
-
-    }},
-	callback);
-};
-
-module.exports.updateBAccBalance = function(bAccToUpdate, updateData, callback){
-	const query = {bAlias: bAccToUpdate.bAlias};
-	BAcc.findOneAndUpdate(query, 
-    { $set: { 
-    	"bBalance": updateData.bBalance
+		"bAct": bAcc.bAct,
+		"bNumber": bAcc.bNumber,
+		"bBank": bAcc.bBank
     }},
 	callback);
 };
