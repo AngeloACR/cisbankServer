@@ -68,8 +68,8 @@ module.exports.createMove = function(newMove, callback){
 };
 
 module.exports.updateMove = function(move, callback){
-	const query = {tName: tAcc.tName};
-	TAcc.findOneAndUpdate(query, 
+	const query = {mCode: move.mCode};
+	Move.findOneAndUpdate(query, 
     { $set: { 
 		"mCode": move.mCode,
 		"mAmmount": move.mAmmount,

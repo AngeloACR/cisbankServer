@@ -23,7 +23,8 @@
     "nodemailer": "*",
     "passport": "*",
     "passport-jwt": "*",
-    "multer": "*"
+    "multer": "*",
+    "node-schedule": "*"
   },
   "author": "Angelo Crincoli",
   "license": "ISC"

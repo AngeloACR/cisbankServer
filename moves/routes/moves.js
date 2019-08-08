@@ -167,7 +167,7 @@ moveRouter.post('/uMove', (req, res, next) => {
 	const mTAcc = req.body.mTAcc;
 	const mDesc = req.body.mDesc;
 	const mSign = req.body.mSign;
-	// Agregar switch case con todas las posibles actualizaciones
+
 	let uMove = new Move ({
 		mCode: mCode,
 		mAmmount: mAmmount,
@@ -180,7 +180,6 @@ moveRouter.post('/uMove', (req, res, next) => {
 	Move.getMoveByCode(mCode, (err,move) => {
 	if(err) throw err;
 		if(!move){
-			console.log("Returning error");
 			return res.json({
 				success: false, 
 				msg:'Move not found'

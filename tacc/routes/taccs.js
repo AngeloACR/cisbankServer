@@ -87,7 +87,7 @@ tAccRouter.get('/gTAccs', (req, res, next) => {
 				status: false,
 				tAccs: tMap
 			});
-		}		
+		}	
 	});
 });
 
@@ -95,7 +95,7 @@ tAccRouter.get('/gTAccs', (req, res, next) => {
 //Update BAcc
 tAccRouter.post('/uTAcc', (req, res, next) => {
 	
-	const tType = req.body.type;
+	const tType = req.body.tType;
 	const tName = req.body.tName
 	const tNature = req.body.tNature
 
@@ -109,7 +109,6 @@ tAccRouter.post('/uTAcc', (req, res, next) => {
 	TAcc.getTAccByName(tName, (err,tAcc) => {
 	if(err) throw err;
 		if(!tAcc){
-			console.log("Returning error");
 			return res.json({
 				success: false, 
 				msg:'TAcc not found'

@@ -101,10 +101,12 @@ bAccRouter.post('/uBAcc', (req, res, next) => {
 		bNumber: bNumber,
 		bAct: bAct
 	});
+		console.log(bAlias);
 
 	BAcc.getBAccByAlias(bAlias, (err,bank) => {
 		if(err) throw err;
 		if(!bank){
+			console.log('here 1');
 			return res.json({
 				success: false, 
 				msg:'BAcc not found'
