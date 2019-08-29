@@ -24,6 +24,20 @@ const BAccSchema = mongoose.Schema({
 	}],
 	bAct:{
 		type: String
+		required: true
+	},
+	bAddress: {
+		type: String,
+	},
+	bPhone: {
+		type: String,
+		required: true
+	},
+	bEx:[{
+		type: String
+	}],
+	bExPhone:{
+		type: String
 	}
 });
 

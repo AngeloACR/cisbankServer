@@ -11,14 +11,22 @@ bAccRouter.post('/cBAcc', (req, res, next) => {
 //	const bBalance = req.body.bBalance;
 	const bNumber = req.body.bNumber;
 	const bAct = req.body.bAct;
+	const bAddress: req.body.bAddress,
+	const bPhone: req.body.bPhone,
+	const bEx: req.body.bEx,
+	const bExPhone: req.body.bExPhone,
 
 	let newBAcc = new BAcc({
 		bAlias: bAlias,
 		bBank: bBank,
-//		bBalance: bBalance,
 		bBalance: 0,
 		bNumber: bNumber,
-		bAct: bAct
+		bAct: bAct,
+		bAddress: bAddress,
+		bPhone: bPhone,
+		bEx: bEx,
+		bExPhone: bExPhone,
+
 	});
 	
 	BAcc.createBAcc(newBAcc, (cErr, bAcc) => {
