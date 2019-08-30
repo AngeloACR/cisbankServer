@@ -23,6 +23,7 @@ tAccRouter.post('/cTAcc', (req, res, next) => {
 		tName: tName,
 		tMonth: tMonth,
 		tNature: tNature,
+		tType: tType,		
 		tBalance: 0
 	});
 	
