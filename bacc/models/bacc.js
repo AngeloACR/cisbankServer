@@ -23,7 +23,7 @@ const BAccSchema = mongoose.Schema({
 		type: String
 	}],
 	bAct:{
-		type: String
+		type: String,
 		required: true
 	},
 	bAddress: {

@@ -11,10 +11,10 @@ bAccRouter.post('/cBAcc', (req, res, next) => {
 //	const bBalance = req.body.bBalance;
 	const bNumber = req.body.bNumber;
 	const bAct = req.body.bAct;
-	const bAddress: req.body.bAddress,
-	const bPhone: req.body.bPhone,
-	const bEx: req.body.bEx,
-	const bExPhone: req.body.bExPhone,
+	const bAddress = req.body.bAddress;
+	const bPhone = req.body.bPhone;
+	const bEx = req.body.bEx;
+	const bExPhone = req.body.bExPhone;
 
 	let newBAcc = new BAcc({
 		bAlias: bAlias,
