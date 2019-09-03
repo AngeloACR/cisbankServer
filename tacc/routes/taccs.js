@@ -12,11 +12,13 @@ tAccRouter.post('/cTAcc', (req, res, next) => {
 
 	const tName = req.body.tName;
 	const tMonth = req.body.tMonth;
+	const tClasf = req.body.tClasf;
 	const tType = req.body.tType;
 	const tNature = req.body.tNature;
 
 	let newTAcc = new TAcc({
 		tName: tName,
+		tClasf: tClasf,
 		tBalance: 0,
 		tType: tType,
 		tNature: tNature
@@ -133,11 +135,13 @@ tAccRouter.get('/gTAccs', (req, res, next) => {
 tAccRouter.post('/uTAcc', (req, res, next) => {
 	
 	const tType = req.body.tType;
+	const tClasf = req.body.tClasf;
 	const tName = req.body.tName
 	const tNature = req.body.tNature
 
 	let tacc = new TAcc({
 		tName: tName,
+		tClasf: tClasf,
 		tType: tType,
 		tNature: tNature
 	});

@@ -11,6 +11,10 @@ const TAccSchema = mongoose.Schema({
 		type: Number,
 		required: true
 	},
+	tClasf: {
+		type: String,
+		required: true
+	},
 	tType: {
 		type: String,
 		required: true
@@ -53,6 +57,7 @@ module.exports.updateTAcc = function(tAcc, callback){
 	const query = {tName: tAcc.tName};
 	TAcc.findOneAndUpdate(query, 
     { $set: { 
+		"tClasf": tAcc.tClasf,
 		"tType": tAcc.tType,
 		"tNature": tAcc.tNature
     }},
