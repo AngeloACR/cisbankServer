@@ -16,20 +16,21 @@ const users = require('./users/routes/users');
 const baccs = require('./bacc/routes/baccs');
 const taccs = require('./tacc/routes/taccs');
 const moves = require('./moves/routes/moves');
+const mtaccs = require('./tacc/routes/mtaccs');
 
 
 // Ports to listen
 const testPort= 3000;
 const prodPort = process.env.PORT || 80;
 
-//const myPort = testPort;
-const myPort = prodPort;
+const myPort = testPort;
+//const myPort = prodPort;
 
 
 //Database stuff
 
-//const myDB = config.testDB;
-const myDB = config.prodDB;
+const myDB = config.testDB;
+//const myDB = config.prodDB;
 
 	// Connect to Database
 mongoose.connect(myDB);
@@ -91,7 +92,7 @@ app.use('/users', users);
 app.use('/baccs', baccs);
 app.use('/taccs', taccs);
 app.use('/moves', moves);
-
+app.use('/mtaccs', mtaccs);
 
 // Index Route
 

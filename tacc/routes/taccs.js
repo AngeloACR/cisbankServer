@@ -3,6 +3,9 @@ const tAccRouter = express.Router();
 const TAcc = require('../models/tacc');
 const passport = require('passport');
 const MTAcc = require('../models/mtacc');
+const Company = require('../../general/models/company');
+const async = require('async');
+
 
 //Create TAcc
 tAccRouter.post('/cTAcc', (req, res, next) => {
@@ -26,24 +29,58 @@ tAccRouter.post('/cTAcc', (req, res, next) => {
 		tType: tType,		
 		tBalance: 0
 	});
-	
-	MTAcc.createMTAcc(newMTAcc, (mErr, mtAcc) =>{
-		if(mErr) console.log(mErr);
-	});
 
-	TAcc.createTAcc(newTAcc, (cErr, tAcc) => {
-		if(cErr) {
+
+	var createTAcc = function(callback){
+		TAcc.createTAcc(newTAcc, (cErr, tAcc) => {
+			if(cErr) throw cErr
+			if(tAcc){
+				callback(null, tAcc);
+			} else {
+				callback(new Error('Something is wrong, try again in a million years'))
+			}
+		});		
+	}
+
+	var createMTAcc = function(callback){
+		MTAcc.createMTAcc(newMTAcc, (mErr, mtAcc) => {
+			if(mErr) throw mErr
+			if(mtAcc){
+				callback(null, mtAcc);
+			} else {
+				callback(new Error('Something is wrong, try again in a million years'))
+			}
+		});		
+	}
+
+	var updateCompany = function(callback){
+		Company.updateTAcc(tName, (cErr, company) => {
+			if(cErr) throw cErr;
+			if(company){
+				callback(null, company);
+			} else {
+				callback(new Error('Something is wrong, try again in a million years'))
+			}
+		});
+	}
+
+	async.series([
+    	createTAcc,
+    	createMTAcc,
+    	updateCompany,
+	], function (err, info) {
+		if (err){	
 			return res.json({
 				success: false, 
-				msg: cErr
-			});
+				msg: err
+			})
+		} else{					
+			return res.json({
+				success: true, 
+				msg: 'TAcc registered'
+			})
 		}
-		return res.json({
-			success: true, 
-			msg: 'TAcc registered',
-			tAcc: tAcc
-		})
-	});	
+	});
 });
 
 //Get TAcc
@@ -62,10 +99,9 @@ tAccRouter.post('/gTAcc', (req, res, next) => {
 			return res.json({
 				success: true, 
 				TAcc: tAcc
-			});				
+			});
 		};
 	});
-
 });
 
 // Get all BAccs
@@ -130,27 +166,71 @@ tAccRouter.post('/dTAcc', (req, res, next) => {
 
 	const tName = req.body.tName
 
-	TAcc.getTAccByName(tName, (cErr,tAcc) => {
-	if(cErr) throw cErr;
-		if(!tAcc){
+	var getTAcc = function(callback){
+		TAcc.getTAccByName(tName, (cErr,tacc) => {
+			if(cErr) throw cErr;
+			if(tacc){
+				callback(null, tacc);
+			} else {
+				callback(new Error('Something is wrong, try again in a million years'))
+			}
+		});
+	}
+
+	var removeTAcc = function(tacc, callback){
+		Company.removeTAcc(tacc.tName, (dErr,dtAcc) => {
+			if(dErr) throw dErr
+			if(dtAcc){
+				callback(null, tacc);
+			} else {
+				callback(new Error('Something is wrong, try again in a million years'))
+			}
+		})
+	}
+
+	var deleteMTAcc = function(tacc, callback){
+		MTAcc.deleteMTAcc(tacc, (dErr,dtAcc) => {
+			if(dErr) throw dErr;
+			if(dtAcc){
+				callback(null, tacc);
+			} else {
+				callback(new Error('Something is wrong, try again in a million years'))
+			}
+		})
+	}
+
+	var deleteTAcc = function(tacc, callback){
+		TAcc.deleteTAcc(tacc, (dErr,dtAcc) => {
+			if(dErr) throw dErr
+			if(dtAcc){
+				callback(null, dtAcc);
+			} else {
+				callback(new Error('Something is wrong, try again in a million years'))
+			}
+		})
+	}
+	
+	async.waterfall([
+		getTAcc,
+		removeTAcc,
+    	deleteMTAcc,
+    	deleteTAcc,
+	], function (err, info) {
+		if (err){	
 			return res.json({
-				status: false, 
-				msg:'TAcc not found'
-			});			
-		} else{
-			TAcc.deleteTAcc(tAcc, (dErr,dTAcc) => {
-				if(dErr) throw dErr;
-				return res.json({
-					status: true, 
-					msg:'TAcc deleted'
-				});			
-			});	
-		};
+				success: false, 
+				msg: err
+			})
+		} else{					
+			return res.json({
+				success: true, 
+				msg: 'TAcc deleted'
+			})
+		}
 	});
 });
 
-// Get all BAccs
-tAccRouter.get('/gmTAccs', (req, res, next) => {
+/*tAccRouter.get('/gmTAccs', (req, res, next) => {
 	MTAcc.getAllMTAccs( (err, mtAccs) => {
 		if (err) throw err;
 		var tMap = [{}];
@@ -170,6 +250,26 @@ tAccRouter.get('/gmTAccs', (req, res, next) => {
 			});
 		}		
 	});
-});
+
+	/*MTAcc.getAllMTAccs( (err, mtAccs) => {
+		if (err) throw err;
+		var tMap = [{}];
+		var i = 0;
+		if (mtAccs && mtAccs.length) {   
+			mtAccs.forEach(function(mtAcc) {
+				tMap[i] = mtAcc;
+				i++;
+			});
+			return res.json({
+				status: true,
+				mtAccs: tMap
+			});
+		} else {
+			return res.json({
+				status: false
+			});
+		}		
+	});*/
+//});
 
 module.exports = tAccRouter;

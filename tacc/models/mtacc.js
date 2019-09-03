@@ -32,18 +32,27 @@ module.exports.getMTAccById = function(id, callback){
 	mTAcc.findById(id, callback);
 };
 
+module.exports.getMTAcc = function(tacc, month, callback){
+	const query = {tName: tacc, tMonth: tMonth};
+	mTAcc.findOne(query, callback);
+};
 module.exports.getMTAccByName = function(name, callback){
 	mTAcc.findById(name, callback);
 };
 
-module.exports.getMTAccByMonth = function(tMonth, callback){
+module.exports.getMTAccsByMonth = function(tMonth, callback){
 	const query = {tMonth: tMonth};
-	mTAcc.findOne(query, callback);
+	mTAcc.find(query, callback);
 };
 
 module.exports.getAllMTAccs = function(callback){
 	const query = {};
 	mTAcc.find(query, callback);
+};
+
+module.exports.deleteMTAcc = function(mtAcc, callback){
+	const query = {tName: mtAcc.tName};
+	mTAcc.findOneAndRemove(query, callback);	
 };
 
 module.exports.createMTAcc = function(newMTAcc, callback){

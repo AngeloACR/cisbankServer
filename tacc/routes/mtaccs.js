@@ -1,7 +1,9 @@
 const express = require('express');
 const mtAccRouter = express.Router();
 const mTAcc = require('../models/mtacc');
+const company = require('../../general/models/company');
 const passport = require('passport');
+const async = require('async');
 
 //Create mTAcc
 mtAccRouter.post('/cmTAcc', (req, res, next) => {
@@ -35,29 +37,66 @@ mtAccRouter.post('/cmTAcc', (req, res, next) => {
 });
 
 //Get mTAcc
-mtAccRouter.post('/gmTAcc', (req, res, next) => {
+mtAccRouter.get('/gmTAccs', (req, res, next) => {
+	
+	var getInfo = function(callback){
+		company.getInfo( (err, info) => {
+		if(err) throw err;
+			if(info){
+				callback(null, info);
+			} else {
+				callback(new Error('Something is wrong, try again in a million years'))
+			}
+		});		
+	}
 
-	const tName = req.body.tName;
+	var getMTaccs = function(info, callback){
+		const months = info.actMonths;
+		const taccs = info.taccs
+		mTAcc.getAllMTAccs( (err, mtaccs) => {
+		if(err) throw err;
+			if(mtaccs){
+				var tMap = {};
+				for (let month of months){
+					tMap[month] = [{}]
+					for (let tacc of taccs){
+						var i = 0
+						for (let mtacc of mtaccs){
+							if (mtacc.tName == tacc){
+								tMap[month].push(mtacc);
+								i++;
+							}
+						}
+					}
+				}
+				callback(null, tMap);
+			} else {
+				callback(new Error('Something is wrong, try again in a million years'))
+			}
+		});		
+	}
 
-	mTAcc.getMTAccByName(tName, (err,mtAcc) => {
-	if(err) throw err;
-		if(!mtAcc){
+	async.waterfall([
+		getInfo,
+		getMTaccs
+	], function (err, tMap){
+		if (err) throw err
+			if(tMap){					
 			return res.json({
-				success: false, 
-				msg:'mtAcc not found'
-			});			
-		} else{
+				status: true,
+				mtAccs: tMap
+			});
+		} else {
 			return res.json({
-				success: true, 
-				mTAcc: mtAcc
-			});				
-		};
-	});
-
+				status: false
+			});
+		}
+		}
+	);
 });
 
 // Get all BAccs
-mtAccRouter.get('/gmTAccs', (req, res, next) => {
+/*mtAccRouter.get('/gmTAccs', (req, res, next) => {
 	mTAcc.getAllMTAccs( (err, mtAccs) => {
 		if (err) throw err;
 		var tMap = [{}];
@@ -77,7 +116,7 @@ mtAccRouter.get('/gmTAccs', (req, res, next) => {
 			});
 		}		
 	});
-});
+});*/
 
 
 //Update BAcc

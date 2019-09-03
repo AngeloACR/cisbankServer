@@ -31,7 +31,7 @@ def closeConnect(connection):
 	except:
 		sendResult("Close Error")
 
-def updateB(bId, mId, myDB):
+def cashflow(myDB):
 	try:
 		bConnect = connectDB(myDB)
 
@@ -73,80 +73,6 @@ def updateB(bId, mId, myDB):
 		status = True
 		return status
 
-	except Exception as ex:
-		template = "An exception of type {0} occurred. Arguments:\n{1!r}"
-		message = template.format(type(ex).__name__, ex.args)
-		sendResult(message)
-		status = False
-		return status
-
-
-def updateT(tId, mId, myDB):
-	try:
-		tConnect = connectDB(myDB)
-
-		taccs = tConnect.cisbank.taccs
-		moves = tConnect.cisbank.moves
-
-		tQuery = {'tName': tId}
-		mQuery = {'mCode': mId}
-		tacc = taccs.find_one(tQuery)
-		move = moves.find_one(mQuery)
-
-		newBalance = tacc['tBalance'] + move['mAmmount']
-
-		newMoves = []
-		newMoves.extend(tacc['tMoves'])
-		newMoves.append(mId)
-
-		tBalance = { "$set": { "tBalance": newBalance } }
-		tMoves = { "$set": { "tMoves": newMoves } }
-		
-		taccs.update_one(tQuery, tBalance)
-		taccs.update_one(tQuery, tMoves)
-		closeConnect(tConnect)
-		status = True
-		return status
-	
-	except Exception as ex:
-		template = "An exception of type {0} occurred. Arguments:\n{1!r}"
-		message = template.format(type(ex).__name__, ex.args)
-		sendResult(message)
-		status = False
-		return status
-
-def totalizeMove(mDate, mId, myDB):
-	try:
-		tConnect = connectDB(myDB)
-
-		dmoves = tConnect.cisbank.dmoves
-		moves = tConnect.cisbank.moves
-
-		dQuery = {'mDate': mDate}
-		dmove = dmoves.find_one(dQuery)
-		mQuery = {'mCode': mId}
-		move = moves.find_one(mQuery)
-
-		if move['mSign']:
-			newDebe = dmove['mDebe'] + move['mAmmount']
-			mDebe = { "$set": { "mDebe": newDebe } }
-			dmoves.update_one(dQuery, mDebe)
-			newTotal = dmove['mTotal'] + move['mAmmount']
-			mTotal = { "$set": { "mTotal": newTotal } }
-			dmoves.update_one(dQuery, mTotal)
-		else:
-			newHaber = dmove['mHaber'] + move['mAmmount']
-			mHaber = { "$set": { "mHaber": newHaber } }
-			dmoves.update_one(dQuery, mHaber)
-			newTotal = dmove['mTotal'] - move['mAmmount']
-			mTotal = { "$set": { "mTotal": newTotal } }
-			dmoves.update_one(dQuery, mTotal)
-		
-
-		closeConnect(tConnect)
-		status = True
-		return status
-	
 	except Exception as ex:
 		template = "An exception of type {0} occurred. Arguments:\n{1!r}"
 		message = template.format(type(ex).__name__, ex.args)
