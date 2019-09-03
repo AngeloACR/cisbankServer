@@ -9,7 +9,7 @@ const CompanySchema = mongoose.Schema({
 	actMonths: [{
 		type: String
 	}],
-	employeesType: [{
+	usersType: [{
 		type: String
 	}],
 	taccs: [{
