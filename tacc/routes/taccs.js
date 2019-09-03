@@ -169,11 +169,12 @@ tAccRouter.post('/uTAcc', (req, res, next) => {
 tAccRouter.post('/dTAcc', (req, res, next) => {
 
 	const tName = req.body.tName
-
+	console.log("step 1");
 	var getTAcc = function(callback){
 		TAcc.getTAccByName(tName, (cErr,tacc) => {
 			if(cErr) throw cErr;
 			if(tacc){
+	console.log("step 2");
 				callback(null, tacc);
 			} else {
 				callback(new Error('Something is wrong, try again in a million years'))
@@ -185,6 +186,7 @@ tAccRouter.post('/dTAcc', (req, res, next) => {
 		Company.removeTAcc(tacc.tName, (dErr,dtAcc) => {
 			if(dErr) throw dErr
 			if(dtAcc){
+	console.log("step 3");
 				callback(null, tacc);
 			} else {
 				callback(new Error('Something is wrong, try again in a million years'))
@@ -196,6 +198,7 @@ tAccRouter.post('/dTAcc', (req, res, next) => {
 		MTAcc.deleteMTAcc(tacc, (dErr,dtAcc) => {
 			if(dErr) throw dErr;
 			if(dtAcc){
+	console.log("step 4");
 				callback(null, tacc);
 			} else {
 				callback(new Error('Something is wrong, try again in a million years'))
@@ -207,6 +210,7 @@ tAccRouter.post('/dTAcc', (req, res, next) => {
 		TAcc.deleteTAcc(tacc, (dErr,dtAcc) => {
 			if(dErr) throw dErr
 			if(dtAcc){
+	console.log("step 5");
 				callback(null, dtAcc);
 			} else {
 				callback(new Error('Something is wrong, try again in a million years'))
@@ -220,12 +224,13 @@ tAccRouter.post('/dTAcc', (req, res, next) => {
     	deleteMTAcc,
     	deleteTAcc,
 	], function (err, info) {
-		if (err){	
+		if (err){
 			return res.json({
 				success: false, 
 				msg: err
 			})
-		} else{					
+		} else{	
+	console.log("step 6");				
 			return res.json({
 				success: true, 
 				msg: 'TAcc deleted'
