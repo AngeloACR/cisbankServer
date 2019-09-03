@@ -80,15 +80,15 @@ mtAccRouter.get('/gmTAccs', (req, res, next) => {
 		getInfo,
 		getMTaccs
 	], function (err, tMap){
-		if (err) throw err
+		if (err) {
+		return res.json({
+			status: false
+		});
+		}
 			if(tMap){					
 			return res.json({
 				status: true,
 				mtAccs: tMap
-			});
-		} else {
-			return res.json({
-				status: false
 			});
 		}
 		}
