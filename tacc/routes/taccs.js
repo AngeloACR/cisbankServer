@@ -239,7 +239,7 @@ tAccRouter.post('/dTAcc', (req, res, next) => {
 	});
 });
 
-/*tAccRouter.get('/gmTAccs', (req, res, next) => {
+tAccRouter.get('/gmTAccs', (req, res, next) => {
 	MTAcc.getAllMTAccs( (err, mtAccs) => {
 		if (err) throw err;
 		var tMap = [{}];
@@ -259,26 +259,6 @@ tAccRouter.post('/dTAcc', (req, res, next) => {
 			});
 		}		
 	});
-
-	/*MTAcc.getAllMTAccs( (err, mtAccs) => {
-		if (err) throw err;
-		var tMap = [{}];
-		var i = 0;
-		if (mtAccs && mtAccs.length) {   
-			mtAccs.forEach(function(mtAcc) {
-				tMap[i] = mtAcc;
-				i++;
-			});
-			return res.json({
-				status: true,
-				mtAccs: tMap
-			});
-		} else {
-			return res.json({
-				status: false
-			});
-		}		
-	});*/
-//});
+});
 
 module.exports = tAccRouter;

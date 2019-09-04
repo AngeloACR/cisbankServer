@@ -33,9 +33,9 @@ const BAccSchema = mongoose.Schema({
 		type: String,
 		required: true
 	},
-	bEx:[{
+	bEx:{
 		type: String
-	}],
+	},
 	bExPhone:{
 		type: String
 	}
