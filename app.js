@@ -29,8 +29,8 @@ const myPort = prodPort;
 
 //Database stuff
 
-const myDB = config.testDB;
-//const myDB = config.prodDB;
+//const myDB = config.testDB;
+const myDB = config.prodDB;
 
 	// Connect to Database
 mongoose.connect(myDB);
