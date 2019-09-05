@@ -189,7 +189,7 @@ def sendResult(dOut):
 def main():
 	#myDB = "mongodb://localhost:27017/cisbank"
 	myDB = "mongodb://angeloacr:cisbankDataBase47@ds051595.mlab.com:51595/cisbank"
-
+	
 	bId = sys.argv[1]
 	tId = sys.argv[2]
 	mId = sys.argv[3]
@@ -198,7 +198,7 @@ def main():
 	statusT = updateT(tId, mId, myDB)
 	#statusM = totalizeMove(mDate, mId, myDB)
 	statusA = totalizeMonths(tId, mId, myDB)
-	if statusB and statusT and statusM:
+	if statusB and statusT and statusA:
 		sendResult("Success")
 	else:
 		sendResult("Error")
