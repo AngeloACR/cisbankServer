@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const config = require('../../config/database');
 const crypto = require('crypto');
+const spawn = require("child_process").spawn;
 
 // Move Schema
 const MoveSchema = mongoose.Schema({
@@ -31,10 +32,6 @@ const MoveSchema = mongoose.Schema({
 	mDesc: {
 		type: String,
 		required: true
-	},
-	isRemoved: {
-		type: Boolean,
-		default: false
 	},
 	mCode: {
 		type: String
@@ -90,20 +87,40 @@ module.exports.setCode = function(move, code, callback){
 	callback);
 };
 
-module.exports.removeMove = function(rMove, callback){
-	const query = {mCode: rMove.mCode};
-	Move.findOneAndUpdate(query, 
-    { $set: { 
-    	"isRemoved": true
-    }},
-	callback);
+module.exports.deleteMove = function(move, callback){
+
+	var status = true;
+	const bId = move.mBAcc;
+	const tId = move.mTAcc;
+	const mId = move.mCode;
+	const updatePath = "./python/deleteMove.py";
+
+	const updateOptions = [updatePath, bId, tId, mId];
+
+	const updateProcess = spawn('python', updateOptions);
+
+	var myData;
+
+	updateProcess.stdout.on('data', (data) => {
+		myData = data.toString();
+	});
+
+	updateProcess.on('close', (code) => {
+		if(code == 'Error'){
+			callback(new Error('Something happened'));
+		} else{	
+			const query = {mCode: mId}
+			Move.findOneAndRemove(query, callback);	
+		}
+	});
+
 };
 
-module.exports.deleteMove = function(move, callback){
-	const query = {mCode: move.mCode}
-	console.log(query);
-	Move.findOneAndRemove(query, callback);	
+module.exports.getMovesByTAcc = function(tacc, callback){
+	const query = {mTAcc: tacc}
+	Move.find(query, callback);	
 };
+
 
 module.exports.getCode = function(mId, bId, tId){
 	let mCode = String(mId)

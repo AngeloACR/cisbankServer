@@ -11,9 +11,9 @@ moveRouter.post('/cMove', (req, res, next) => {
 //	const mCode = Move.estimatedDocumentCount();					//INGENIARSE UN METODO DE ASIGNACION DE MCODE
 	const mAmmount = req.body.mAmmount;
 	const mBAcc = req.body.mBAcc;
+	const mTAcc = req.body.mTAcc;
 	const mSign = req.body.mSign;
 	const mDesc = req.body.mDesc;
-	const mTAcc = req.body.mTAcc;
 	const mDate = req.body.mDate;
 
 	let newMove = new Move({
@@ -37,7 +37,6 @@ moveRouter.post('/cMove', (req, res, next) => {
 
 			DMove.createDMove(newDMove, (cErr, nDMove) => {
 				if(cErr) {
-					console.log(cErr);
 				}
 
 			});
@@ -70,7 +69,6 @@ moveRouter.post('/cMove', (req, res, next) => {
 			var myData;
 
 			updateProcess.stdout.on('data', (data) => {
-				console.log(data.toString());
 				myData = data.toString();
 			});
 
@@ -234,12 +232,18 @@ moveRouter.post('/dMove', (req, res, next) => {
 				msg:'Move not found'
 			});			
 		} else{
-			Move.deleteMove(move, (mErr,dMove) => {
-				if(mErr) throw mErr;
-				return res.json({
-					status: true, 
-					msg:'Move deleted'
-				});			
+			Move.deleteMove(move, (mErr,status) => {
+				if(mErr){
+					return res.json({
+						success: false, 
+						msg: 'Somtehing happenned'
+					});	
+				}
+					return res.json({
+						success: true, 
+						msg: 'move deleted'
+					});
+
 			});	
 		};
 	});

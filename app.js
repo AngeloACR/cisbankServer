@@ -20,7 +20,7 @@ const mtaccs = require('./tacc/routes/mtaccs');
 
 
 // Ports to listen
-//const testPort= 3000;
+const testPort= 3000;
 const prodPort = process.env.PORT || 80;
 
 //const myPort = testPort;

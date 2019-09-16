@@ -4,6 +4,7 @@ const TAcc = require('../models/tacc');
 const passport = require('passport');
 const MTAcc = require('../models/mtacc');
 const Company = require('../../general/models/company');
+const Move = require('../../moves/models/move');
 const async = require('async');
 
 
@@ -169,12 +170,50 @@ tAccRouter.post('/uTAcc', (req, res, next) => {
 tAccRouter.post('/dTAcc', (req, res, next) => {
 
 	const tName = req.body.tName
-	console.log("step 1");
-	var getTAcc = function(callback){
+
+	var findMoves = function(callback){
+		Move.getMovesByTAcc(tName, (dErr,moves) => {
+			if(dErr) throw dErr
+			if(moves){
+				callback(null, moves);
+			} else {
+				callback(new Error('Something is wrong, try again in a million years'))
+			}
+		})
+	}
+
+	var deleteMoves = function(moves, callback){
+		var aux = true;
+		moves.forEach(function(move){
+			Move.deleteMove(move, (mErr,status) => {
+				if(mErr) aux = false;
+			});
+		});
+		if(aux){
+			callback(null, aux);
+		} else{
+			callback(new Error('Something is wrong, try again in a million years'))			
+		}
+	}
+
+	var moveThing = function(callback){
+		async.waterfall([
+	    	findMoves,
+	    	deleteMoves,
+		], function (err, info) {
+			if (err){	
+				callback(new Error('Something is wrong, try again in a million years'))			
+			} else{
+				callback(null, true);
+			}
+		});
+	}
+
+
+	var getTAcc = function(status, callback){
 		TAcc.getTAccByName(tName, (cErr,tacc) => {
 			if(cErr) throw cErr;
 			if(tacc){
-	console.log("step 2");
 				callback(null, tacc);
 			} else {
 				callback(new Error('Something is wrong, try again in a million years'))
@@ -182,11 +221,11 @@ tAccRouter.post('/dTAcc', (req, res, next) => {
 		});
 	}
 
+
 	var removeTAcc = function(tacc, callback){
 		Company.removeTAcc(tacc.tName, (dErr,dtAcc) => {
 			if(dErr) throw dErr
 			if(dtAcc){
-	console.log("step 3");
 				callback(null, tacc);
 			} else {
 				callback(new Error('Something is wrong, try again in a million years'))
@@ -198,7 +237,6 @@ tAccRouter.post('/dTAcc', (req, res, next) => {
 		MTAcc.deleteMTAcc(tacc, (dErr,dtAcc) => {
 			if(dErr) throw dErr;
 			if(dtAcc){
-	console.log("step 4");
 				callback(null, tacc);
 			} else {
 				callback(new Error('Something is wrong, try again in a million years'))
@@ -210,7 +248,6 @@ tAccRouter.post('/dTAcc', (req, res, next) => {
 		TAcc.deleteTAcc(tacc, (dErr,dtAcc) => {
 			if(dErr) throw dErr
 			if(dtAcc){
-	console.log("step 5");
 				callback(null, dtAcc);
 			} else {
 				callback(new Error('Something is wrong, try again in a million years'))
@@ -219,6 +256,7 @@ tAccRouter.post('/dTAcc', (req, res, next) => {
 	}
 	
 	async.waterfall([
+		moveThing,
 		getTAcc,
 		removeTAcc,
     	deleteMTAcc,
@@ -230,7 +268,6 @@ tAccRouter.post('/dTAcc', (req, res, next) => {
 				msg: err
 			})
 		} else{	
-	console.log("step 6");				
 			return res.json({
 				success: true, 
 				msg: 'TAcc deleted'
