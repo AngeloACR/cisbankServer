@@ -158,21 +158,16 @@ moveRouter.get('/gMoves', (req, res, next) => {
 
 //Update BAcc
 moveRouter.post('/uMove', (req, res, next) => {
-	
+
 	const mCode = req.body.mCode;
-	const mAmmount = req.body.mAmmount;
+	const newAmmount = req.body.mAmmount;
 	const mBAcc = req.body.mBAcc;
-	const mTAcc = req.body.mTAcc;
-	const mDesc = req.body.mDesc;
-	const mSign = req.body.mSign;
+	const mTAcc = req.body.mTAcc
 
 	let uMove = new Move ({
 		mCode: mCode,
-		mAmmount: mAmmount,
 		mBAcc: mBAcc,
 		mTAcc: mTAcc,
-		mDesc: mDesc,
-		mSign: mSign,
 	});
 
 	Move.getMoveByCode(mCode, (err,move) => {
@@ -183,7 +178,7 @@ moveRouter.post('/uMove', (req, res, next) => {
 				msg:'Move not found'
 			});			
 		} else{
-			Move.updateMove(uMove, (uErr,uMove) => {
+			Move.updateMove(uMove, newAmmount, (uErr,uMove) => {
 				return res.json({
 					success: true, 
 					msg: 'Move updated'

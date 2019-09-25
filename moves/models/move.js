@@ -64,10 +64,35 @@ module.exports.createMove = function(newMove, callback){
 	newMove.save(callback);
 };
 
-module.exports.updateMove = function(move, callback){
+module.exports.updateMove = function(move, newAmmount, callback){
+	
+	var status = true;
+	const bId = move.mBAcc;
+	const tId = move.mTAcc;
+	const mId = move.mCode;
+	const updatePath = "./python/updateMove.py";
+	
+	const updateOptions = [updatePath, bId, tId, mId, newAmmount];
+
+	const updateProcess = spawn('python', updateOptions);
+	
+	var myData;
+
+	updateProcess.stdout.on('data', (data) => {
+		myData = data.toString();
+	});
+
+	updateProcess.on('close', (code) => {
+		if(code == 'Error'){
+			callback(new Error('Something happened'));
+		} else{	
+			callback(null, true);
+		}
+	});
+	/*
 	const query = {mCode: move.mCode};
 	Move.findOneAndUpdate(query, 
-    { $set: { 
+		{ $set: { 
 		"mCode": move.mCode,
 		"mAmmount": move.mAmmount,
 		"mBAcc": move.mBAcc,
@@ -75,7 +100,7 @@ module.exports.updateMove = function(move, callback){
 		"mDesc": move.mDesc,
 		"mSign": move.mSign,
     }},
-	callback);
+	callback);*/
 };
 
 module.exports.setCode = function(move, code, callback){
