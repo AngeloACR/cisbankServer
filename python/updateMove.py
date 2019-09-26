@@ -58,28 +58,41 @@ def updateB(bId, mId, myDB, newAmmount):
 
 		bankMoves = []
 		bankMoves.extend(bacc['bMoves'])
-		moveIndex = bankMoves.index(mId)
+		moveIndex = bankMoves.index(mId)+1
 		bmLength = len(bankMoves)
 		auxMoves = bankMoves[moveIndex:bmLength] 
 
 		mOldAux = move['mOld']
+		if move['mSign']:
+			mNewAux = mOldAux + newAmmount
+		else:
+			mNewAux = mOldAux - newAmmount
+
+		mOld = { "$set": { "mOld": mOldAux } }
+		mNew = { "$set": { "mNew": mNewAux } }
+		
+		moves.update_one(mQuery, mOld)
+		moves.update_one(mQuery, mNew)
 
 		for mAux in auxMoves:		
 			mQuery = {'mCode': mAux}
 			move = moves.find_one(mQuery)
 
-			if move['mSign']:
-				mNewAux = mOldAux + newAmmount
-			else:
-				mNewAux = mOldAux - newAmmount
+			mOldAux = mNewAux
 
+			if move['mSign']:
+				mNewAux = mOldAux + move['mAmmount']
+			else:
+				mNewAux = mOldAux - move['mAmmount']
+			
 			mOld = { "$set": { "mOld": mOldAux } }
 			mNew = { "$set": { "mNew": mNewAux } }
-
+			
 			moves.update_one(mQuery, mOld)
 			moves.update_one(mQuery, mNew)
 
-			mOldAux = mNewAux
+
+
 		
 
 		closeConnect(bConnect)
@@ -166,7 +179,7 @@ def main():
 	bId = sys.argv[1]
 	tId = sys.argv[2]
 	mId = sys.argv[3]
-	newAmmount = int(sys.argv[4])
+	newAmmount = float(sys.argv[4])
 	statusB = updateB(bId, mId, myDB, newAmmount)
 	statusT = updateT(tId, mId, myDB, newAmmount)
 	statusA = updateMonths(tId, mId, myDB, newAmmount)

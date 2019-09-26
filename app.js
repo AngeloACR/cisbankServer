@@ -23,8 +23,8 @@ const mtaccs = require('./tacc/routes/mtaccs');
 const testPort= 3400;
 const prodPort = process.env.PORT || 80;
 
-//const myPort = testPort;
-const myPort = prodPort;
+const myPort = testPort;
+//const myPort = prodPort;
 
 
 //Database stuff

@@ -49,25 +49,42 @@ def updateB(bId, mId, myDB):
 
 		oldB = bacc['bBalance']
 
-		newMoves = []
+		bankMoves = []
 
-		newMoves.extend(bacc['bMoves'])
-		newMoves.remove(mId)
+		bankMoves.extend(bacc['bMoves'])
+		moveIndex = bankMoves.index(mId)
+		bmLength = len(bankMoves)
+		mOldAux = move['mOld']
 
-		mOld = { "$set": { "mOld": bacc['bBalance'] } }
-		mNew = { "$set": { "mNew": newBalance } }
+		if bankMoves[moveIndex] != bankMoves[-1]: 
+			moveIndex = moveIndex+1
+			auxMoves = bankMoves[moveIndex:bmLength] 
+			
+
+			for mAux in auxMoves:		
+				mQuery = {'mCode': mAux}
+				move = moves.find_one(mQuery)
+
+				if move['mSign']:
+					mNewAux = mOldAux + move['mAmmount']
+				else:
+					mNewAux = mOldAux - move['mAmmount']
+
+				mOld = { "$set": { "mOld": mOldAux } }
+				mNew = { "$set": { "mNew": mNewAux } }
+
+				moves.update_one(mQuery, mOld)
+				moves.update_one(mQuery, mNew)
+
+				mOldAux = mNewAux
+		
+		bankMoves.remove(mId)
 
 		bBalance = { "$set": { "bBalance": newBalance } }
-		bMoves = { "$set": { "bMoves": newMoves } }
-
-
+		bMoves = { "$set": { "bMoves": bankMoves } }
 		
 		baccs.update_one(bQuery, bBalance)
 		baccs.update_one(bQuery, bMoves)
-		
-		moves.update_one(mQuery, mOld)
-		moves.update_one(mQuery, mNew)
-
 
 		closeConnect(bConnect)
 		status = True

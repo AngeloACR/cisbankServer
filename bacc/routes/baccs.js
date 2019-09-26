@@ -101,15 +101,22 @@ bAccRouter.post('/uBAcc', (req, res, next) => {
 	const bBalance = req.body.bBalance;
 	const bNumber = req.body.bNumber;
 	const bAct = req.body.bAct;
+	const bAddress = req.body.bAddress;
+	const bPhone = req.body.bPhone;
+	const bEx = req.body.bEx;
+	const bExPhone = req.body.bExPhone;
 
 	let uBAcc = new BAcc({
 		bAlias: bAlias,
 		bBank: bBank,
 		bBalance: bBalance,
 		bNumber: bNumber,
-		bAct: bAct
+		bAct: bAct,
+		bAddress: bAddress,
+		bPhone: bPhone,
+		bEx: bEx,
+		bExPhone: bExPhone,
 	});
-		console.log(bAlias);
 
 	BAcc.getBAccByAlias(bAlias, (err,bank) => {
 		if(err) throw err;

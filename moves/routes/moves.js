@@ -15,7 +15,7 @@ moveRouter.post('/cMove', (req, res, next) => {
 	const mSign = req.body.mSign;
 	const mDesc = req.body.mDesc;
 	const mDate = req.body.mDate;
-
+	
 	let newMove = new Move({
 		mAmmount: mAmmount,
 		mBAcc: mBAcc,
@@ -82,6 +82,7 @@ moveRouter.post('/cMove', (req, res, next) => {
 
 /*		return res.json({
 			success: true, 
+    console.log(this.today.getMinutes());
 			msg: 'Move registered',
 			move: move
 		});
