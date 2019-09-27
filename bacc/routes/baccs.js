@@ -186,7 +186,6 @@ bAccRouter.post('/uBAcc', (req, res, next) => {
 bAccRouter.post('/dBAcc', (req, res, next) => {
 
 	const bAlias = req.body.bAlias
-
 	var findMoves = function(callback){
 		Move.getMovesByBAcc(bAlias, (dErr,moves) => {
 			if(dErr) throw dErr
@@ -197,7 +196,6 @@ bAccRouter.post('/dBAcc', (req, res, next) => {
 			}
 		})
 	}
-
 	var deleteMoves = function(moves, callback){
 		var aux = true;
 		moves.forEach(function(move){
@@ -211,7 +209,6 @@ bAccRouter.post('/dBAcc', (req, res, next) => {
 			callback(new Error('Something is wrong, try again in a million years'))			
 		}
 	}
-
 	var moveThing = function(callback){
 		async.waterfall([
 	    	findMoves,
@@ -224,8 +221,6 @@ bAccRouter.post('/dBAcc', (req, res, next) => {
 			}
 		});
 	}
-
-
 	var getBAcc = function(status, callback){
 		BAcc.getBAccByAlias(bAlias, (cErr,bacc) => {
 			if(cErr) throw cErr;
@@ -236,8 +231,6 @@ bAccRouter.post('/dBAcc', (req, res, next) => {
 			}
 		});
 	}
-
-
 	var removeBAcc = function(bacc, callback){
 		Company.removeBAcc(bacc.bAlias, (dErr,dbAcc) => {
 			if(dErr) throw dErr
@@ -248,9 +241,9 @@ bAccRouter.post('/dBAcc', (req, res, next) => {
 			}
 		})
 	}
-
-	var deleteBAcc = function(tacc, callback){
-		BAcc.deleteBAcc(tacc, (dErr,dbAcc) => {
+	var deleteBAcc = function(bacc, callback){
+	console.log(bacc)
+		BAcc.deleteBAcc(bacc.bAlias, (dErr,dbAcc) => {
 			if(dErr) throw dErr
 			if(dbAcc){
 				callback(null, dbAcc);
@@ -259,7 +252,7 @@ bAccRouter.post('/dBAcc', (req, res, next) => {
 			}
 		})
 	}
-	
+
 	async.waterfall([
 		moveThing,
 		getBAcc,
