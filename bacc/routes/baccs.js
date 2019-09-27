@@ -1,7 +1,9 @@
 const express = require('express');
 const bAccRouter = express.Router();
 const BAcc = require('../models/bacc');
+const Move = require('../../moves/models/move');
 const passport = require('passport');
+const async = require('async');
 
 //Create BAcc
 bAccRouter.post('/cBAcc', (req, res, next) => {
@@ -28,7 +30,47 @@ bAccRouter.post('/cBAcc', (req, res, next) => {
 		bExPhone: bExPhone,
 
 	});
-	
+
+	var createBAcc = function(callback){
+		BAcc.createBAcc(newBAcc, (cErr, bAcc) => {
+			if(cErr) throw cErr
+			if(bAcc){
+				callback(null, bAcc);
+			} else {
+				callback(new Error('Something is wrong, try again in a million years'))
+			}
+		});		
+	}
+
+	var updateCompany = function(callback){
+		Company.updateBAcc(bAlias, (cErr, company) => {
+			if(cErr) throw cErr;
+			if(company){
+				callback(null, company);
+			} else {
+				callback(new Error('Something is wrong, try again in a million years'))
+			}
+		});
+	}
+
+	async.series([
+    	createBAcc,
+    	updateCompany,
+	], function (err, info) {
+		if (err){	
+			return res.json({
+				success: false, 
+				msg: err
+			})
+		} else{					
+			return res.json({
+				success: true, 
+				msg: 'BAcc registered'
+			})
+		}
+	});
+
+	/*
 	BAcc.createBAcc(newBAcc, (cErr, bAcc) => {
 		if(cErr) {
 			return res.json({
@@ -41,7 +83,7 @@ bAccRouter.post('/cBAcc', (req, res, next) => {
 			msg: 'BAcc registered',
 			bAcc: bAcc
 		});	
-	});
+	});*/
 
 });
 
@@ -144,7 +186,99 @@ bAccRouter.post('/dBAcc', (req, res, next) => {
 
 	const bAlias = req.body.bAlias
 
-	BAcc.getBAccByAlias(bAlias, (cErr,bank) => {
+	var findMoves = function(callback){
+		Move.getMovesByBAcc(bAlias, (dErr,moves) => {
+			if(dErr) throw dErr
+			if(moves){
+				callback(null, moves);
+			} else {
+				callback(new Error('Something is wrong, try again in a million years'))
+			}
+		})
+	}
+
+	var deleteMoves = function(moves, callback){
+		var aux = true;
+		moves.forEach(function(move){
+			Move.deleteMove(move, (mErr,status) => {
+				if(mErr) aux = false;
+			});
+		});
+		if(aux){
+			callback(null, aux);
+		} else{
+			callback(new Error('Something is wrong, try again in a million years'))			
+		}
+	}
+
+	var moveThing = function(callback){
+		async.waterfall([
+	    	findMoves,
+	    	deleteMoves,
+		], function (err, info) {
+			if (err){	
+				callback(new Error('Something is wrong, try again in a million years'))			
+			} else{
+				callback(null, true);
+			}
+		});
+	}
+
+
+	var getBAcc = function(status, callback){
+		BAcc.getBAccByAlias(bAlias, (cErr,bacc) => {
+			if(cErr) throw cErr;
+			if(bacc){
+				callback(null, bacc);
+			} else {
+				callback(new Error('Something is wrong, try again in a million years'))
+			}
+		});
+	}
+
+
+	var removeBAcc = function(bacc, callback){
+		Company.removeBAcc(bacc.bAlias, (dErr,dbAcc) => {
+			if(dErr) throw dErr
+			if(dbAcc){
+				callback(null, bacc);
+			} else {
+				callback(new Error('Something is wrong, try again in a million years'))
+			}
+		})
+	}
+
+	var deleteBAcc = function(tacc, callback){
+		BAcc.deleteBAcc(tacc, (dErr,dbAcc) => {
+			if(dErr) throw dErr
+			if(dbAcc){
+				callback(null, dbAcc);
+			} else {
+				callback(new Error('Something is wrong, try again in a million years'))
+			}
+		})
+	}
+	
+	async.waterfall([
+		moveThing,
+		getBAcc,
+		removeBAcc,
+    	deleteBAcc,
+	], function (err, info) {
+		if (err){
+			return res.json({
+				success: false, 
+				msg: err
+			})
+		} else{	
+			return res.json({
+				success: true, 
+				msg: 'BAcc deleted'
+			})
+		}
+	});
+
+	/*BAcc.getBAccByAlias(bAlias, (cErr,bank) => {
 	if(cErr) throw cErr;
 		if(!bank){
 			return res.json({
@@ -160,7 +294,7 @@ bAccRouter.post('/dBAcc', (req, res, next) => {
 				});			
 			});	
 		};
-	});
+	});*/
 });
 
 module.exports = bAccRouter;

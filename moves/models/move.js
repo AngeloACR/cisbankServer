@@ -146,6 +146,11 @@ module.exports.getMovesByTAcc = function(tacc, callback){
 	Move.find(query, callback);	
 };
 
+module.exports.getMovesByBAcc = function(bacc, callback){
+	const query = {mBAcc: bacc}
+	Move.find(query, callback);	
+};
+
 
 module.exports.getCode = function(mId, bId, tId){
 	let mCode = String(mId)

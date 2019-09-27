@@ -27,6 +27,24 @@ module.exports.getInfo = function(callback){
 	company.findOne(query, callback);
 };
 
+module.exports.updateBAcc = function(newBacc, callback){
+	const query = {};
+	company.findOneAndUpdate(query, 
+    {  $push: { 
+    	"baccs": newTacc  
+    }},
+	callback);
+};
+
+module.exports.removeBAcc = function(delBacc, callback){
+	const query = {};
+	company.findOneAndUpdate(query,
+    {  $pull: {
+    	"baccs": delBacc
+    }},
+	callback);
+};
+
 module.exports.updateTAcc = function(newTacc, callback){
 	const query = {};
 	company.findOneAndUpdate(query, 
