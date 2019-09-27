@@ -2,6 +2,7 @@ const express = require('express');
 const bAccRouter = express.Router();
 const BAcc = require('../models/bacc');
 const Move = require('../../moves/models/move');
+const Company = require('../../general/models/company');
 const passport = require('passport');
 const async = require('async');
 
