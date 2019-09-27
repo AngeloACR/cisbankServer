@@ -31,7 +31,7 @@ module.exports.updateBAcc = function(newBacc, callback){
 	const query = {};
 	company.findOneAndUpdate(query, 
     {  $push: { 
-    	"baccs": newTacc  
+    	"baccs": newBacc  
     }},
 	callback);
 };
